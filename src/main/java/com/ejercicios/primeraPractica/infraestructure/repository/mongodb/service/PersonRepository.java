@@ -1,6 +1,5 @@
 package com.ejercicios.primeraPractica.infraestructure.repository.mongodb.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -16,7 +15,7 @@ import com.ejercicios.primeraPractica.infraestructure.repository.mongodb.entity.
 @EnableMongoRepositories
 public interface PersonRepository extends MongoRepository<PersonEntity, String> {
 
-	List<PersonEntity> findByType(PersonType type);
+	Page<PersonEntity> findByType(PersonType type);
 
 	Optional<PersonEntity> findByPersoInfoDocument(String document);
 
