@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: NuMeAppHex
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: numeapp-db
+server:
+  port: 8081
+

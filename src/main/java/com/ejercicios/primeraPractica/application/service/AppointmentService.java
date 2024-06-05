@@ -8,12 +8,12 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ejercicios.primeraPractica.database.repository.AppointmentRepository;
-import com.ejercicios.primeraPractica.database.repository.PersonRepository;
-import com.ejercicios.primeraPractica.negocio.dto.AppointmentRequest;
-import com.ejercicios.primeraPractica.negocio.model.Appointment;
-import com.ejercicios.primeraPractica.negocio.model.Person;
-import com.ejercicios.primeraPractica.negocio.model.PersonType;
+import com.ejercicios.primeraPractica.domain.model.Appointment;
+import com.ejercicios.primeraPractica.domain.model.Person;
+import com.ejercicios.primeraPractica.domain.model.PersonType;
+import com.ejercicios.primeraPractica.infraestructure.apirest.dto.request.AppointmentRequest;
+import com.ejercicios.primeraPractica.infraestructure.repository.mongodb.service.AppointmentRepository;
+import com.ejercicios.primeraPractica.infraestructure.repository.mongodb.service.PersonRepository;
 
 @Service
 public class AppointmentService {

@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ejercicios.primeraPractica.database.repository.PersonRepository;
-import com.ejercicios.primeraPractica.negocio.dto.AppointmentRequest;
-import com.ejercicios.primeraPractica.negocio.model.Appointment;
-import com.ejercicios.primeraPractica.negocio.service.AppointmentService;
+import com.ejercicios.primeraPractica.application.service.AppointmentService;
+import com.ejercicios.primeraPractica.domain.model.Appointment;
+import com.ejercicios.primeraPractica.infraestructure.apirest.dto.request.AppointmentRequest;
+import com.ejercicios.primeraPractica.infraestructure.repository.mongodb.service.PersonRepository;
 
 @RestController
 @RequestMapping("/appointments")
