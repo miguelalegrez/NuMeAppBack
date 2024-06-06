@@ -92,24 +92,31 @@ public class PersonController {
 
 	@PostMapping("/patients")
 	public ResponseEntity addPatient(@Valid @RequestBody PostPutPersonDto personDto) {
-		Person patient = personToPostPutDtoMapper.fromOutputToInput(personDto);
-
-		String idNewPatient = personService.createPatient(patient);
-
-		URI locationHeader = createUri(idNewPatient);
-
-		return ResponseEntity.created(locationHeader).build();
+		try {
+			Person patient = personToPostPutDtoMapper.fromOutputToInput(personDto);
+			String idNewPatient = personService.createPatient(patient);
+			URI locationHeader = createUri(idNewPatient);
+			return ResponseEntity.created(locationHeader).build();
+		} catch (BusinessException e) {
+			log.error("Error creating patient", e);
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
 	}
 
 	@PostMapping("/nutritionists")
 	public ResponseEntity addNutritionist(@Valid @RequestBody PostPutPersonDto personDto) {
-		Person nutritionist = personToPostPutDtoMapper.fromOutputToInput(personDto);
 
-		String idNewNutritionist = personService.createNutritionist(nutritionist);
+		try {
+			Person nutritionist = personToPostPutDtoMapper.fromOutputToInput(personDto);
+			String idNewNutritionist = personService.createNutritionist(nutritionist);
+			URI locationHeader = createUri(idNewNutritionist);
+			return ResponseEntity.created(locationHeader).build();
 
-		URI locationHeader = createUri(idNewNutritionist);
+		} catch (BusinessException e) {
+			log.error("Error creating nutritionist", e);
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
 
-		return ResponseEntity.created(locationHeader).build();
 	}
 
 	@PutMapping("/{id}")

@@ -15,6 +15,6 @@ import lombok.NoArgsConstructor;
 public class Appointment {
 	private String id;
 	private LocalDateTime date;
-	private String patientDocument;
+	private String patientId;
 	private String nutritionistId;
 }

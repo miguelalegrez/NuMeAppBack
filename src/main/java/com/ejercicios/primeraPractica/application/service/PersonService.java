@@ -1,5 +1,7 @@
 package com.ejercicios.primeraPractica.application.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,40 +67,50 @@ public class PersonService implements PersonServiceInputPort {
 	}
 
 	@Override
-	public String createPatient(@Valid Person person) {
+	public String createPatient(@Valid Person person) throws BusinessException {
 		log.debug("createPatient");
 
 		if (person.getType() != PersonType.PATIENT) {
-			throw new IllegalArgumentException("Invalid person type for creating a patient");
+			throw new BusinessException(Errors.INVALID_PERSON_TYPE);
 		}
 
 		// Validate if a person with the same document already exists
 		dniValidator.validatePersonExistsByDocument(person.getPersoInfo().getDocument());
 
+		// Initialize appointments and Medical Record
+		List<String> appointments = new ArrayList();
+		person.setAppointmentId(appointments);
+
+		List<String> medicalRecords = new ArrayList();
+		person.setMedicalRecordId(medicalRecords);
+
 		// Create the person
 		String nuevoId = personRepository.createPerson(person);
-
-		// Assign the new ID to the person object
 		person.setId(nuevoId);
 
 		return nuevoId;
 	}
 
 	@Override
-	public String createNutritionist(@Valid Person person) {
+	public String createNutritionist(@Valid Person person) throws BusinessException {
 		log.debug("createNutritionist");
 
 		if (person.getType() != PersonType.NUTRITIONIST) {
-			throw new IllegalArgumentException("Invalid person type for creating a nutritionist");
+			throw new BusinessException(Errors.INVALID_PERSON_TYPE);
 		}
 
 		// Validate if a person with the same document already exists
 		dniValidator.validatePersonExistsByDocument(person.getPersoInfo().getDocument());
 
+		// Initialize appointments and Medical Record
+		List<String> appointments = new ArrayList();
+		person.setAppointmentId(appointments);
+
+		List<String> medicalRecords = new ArrayList();
+		person.setMedicalRecordId(medicalRecords);
+
 		// Create the person
 		String nuevoId = personRepository.createPerson(person);
-
-		// Assign the new ID to the person object
 		person.setId(nuevoId);
 
 		return nuevoId;

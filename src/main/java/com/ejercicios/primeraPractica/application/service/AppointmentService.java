@@ -26,7 +26,7 @@ public class AppointmentService {
 
 	// Get all appointments
 
-	public List<Appointment> getAppointments() {
+	public Page<Appointment> getAppointments() {
 		return appointmentRepository.findAll();
 	}
 

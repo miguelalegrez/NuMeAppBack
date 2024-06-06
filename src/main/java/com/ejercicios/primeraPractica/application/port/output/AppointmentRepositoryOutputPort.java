@@ -14,13 +14,11 @@ public interface AppointmentRepositoryOutputPort {
 
 	Page<Appointment> getAppointments(@Valid Pageable pageable);
 
-	Page<Appointment> getPatientAppointments(@Valid PersonType type, Pageable pageable);
-
-	Page<Appointment> getNutritionistAppointments(@Valid PersonType type, Pageable pageable);
-
-	String addAppointment(@Valid Appointment appointment);
+	Page<Appointment> getAppointmentsByType(@Valid PersonType type, Pageable pageable);
 
 	Optional<Appointment> getAppointmentById(@Valid String id);
+
+	String addAppointment(@Valid Appointment appointment);
 
 	void modifyAppointment(@Valid Appointment appointment);
 

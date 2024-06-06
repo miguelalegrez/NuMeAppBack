@@ -19,9 +19,9 @@ public interface PersonServiceInputPort {
 
 	Optional<Person> getPersonById(@Valid String id) throws BusinessException;
 
-	String createPatient(@Valid Person person);
+	String createPatient(@Valid Person person) throws BusinessException;
 
-	String createNutritionist(@Valid Person person);
+	String createNutritionist(@Valid Person person) throws BusinessException;
 
 	void modifyPerson(@Valid Person person) throws BusinessException;
 

@@ -14,9 +14,7 @@ public interface AppointmentServiceInputPort {
 
 	Page<Appointment> getAppointments(@Valid Pageable pageable);
 
-	Page<Appointment> getPatientAppointments(@Valid PersonType type, Pageable pageable);
-
-	Page<Appointment> getNutritionistAppointments(@Valid PersonType type, Pageable pageable);
+	Page<Appointment> getAppointmentsByType(@Valid PersonType type, Pageable pageable);
 
 	String addAppointment(@Valid Appointment appointment);
 

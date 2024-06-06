@@ -29,6 +29,7 @@ public class PersonRepositoryService implements PersonRepositoryOutputPort {
 	PersonToPersonEntityMapper personToPersonEntityMapper;
 
 	public Page<Person> getAllPerson(@Valid Pageable pageable) {
+		log.debug("getAllPerson");
 		Page<PersonEntity> personsList = persoRepository.findByEliminado(false, pageable);
 		return personToPersonEntityMapper.fromOutputToInput(personsList);
 	}
@@ -36,6 +37,8 @@ public class PersonRepositoryService implements PersonRepositoryOutputPort {
 	@Override
 	@Cacheable(value = "persons", key = "#pageable")
 	public Page<Person> getPersonsByType(@Valid PersonType type, Pageable pageable) {
+		log.debug("getPersonsByType");
+
 		Page<PersonEntity> personTypeList = persoRepository.findByEliminadoAndType(false, type, pageable);
 		return personToPersonEntityMapper.fromOutputToInput(personTypeList);
 	}
@@ -43,6 +46,8 @@ public class PersonRepositoryService implements PersonRepositoryOutputPort {
 	@Override
 	@Cacheable(value = "persons", key = "#id")
 	public Optional<Person> getPersonById(@Valid String id) {
+		log.debug("getPersonsById");
+
 		Optional<PersonEntity> personEntity = persoRepository.findByIdAndEliminado(id, false);
 		return personToPersonEntityMapper.fromOutputToInput(personEntity);
 	}
@@ -50,6 +55,8 @@ public class PersonRepositoryService implements PersonRepositoryOutputPort {
 	// get user by personal document to validate if exists in db.
 	@Override
 	public Optional<Person> findByPersoInfoDocument(@Valid String document) {
+		log.debug("findByPersoInfoDocument");
+
 		Optional<PersonEntity> personEntityOpt = persoRepository.findByPersoInfoDocument(document);
 		return personToPersonEntityMapper.fromOutputToInput(personEntityOpt);
 	}
@@ -57,6 +64,8 @@ public class PersonRepositoryService implements PersonRepositoryOutputPort {
 	@Override
 	@CacheEvict(value = "persons", allEntries = true)
 	public String createPerson(@Valid Person person) {
+		log.debug("createPerson");
+
 		PersonEntity personEntity = personToPersonEntityMapper.fromInputToOutput(person);
 		personEntity.setEliminado(false);
 
@@ -67,6 +76,9 @@ public class PersonRepositoryService implements PersonRepositoryOutputPort {
 	@Override
 	@CacheEvict(value = "persons", allEntries = true)
 	public void modifyPerson(@Valid Person person) {
+		log.debug("modifyPerson");
+
+		Optional<PersonEntity> existingPersonEntity = persoRepository.findByIdAndEliminado(person.getId(), false);
 		PersonEntity personEntity = personToPersonEntityMapper.fromInputToOutput(person);
 		persoRepository.save(personEntity);
 	}
@@ -74,6 +86,8 @@ public class PersonRepositoryService implements PersonRepositoryOutputPort {
 	@Override
 	@CacheEvict(value = "persons", allEntries = true)
 	public void deletePerson(@Valid String id) {
+		log.debug("deletePerson");
+
 		Optional<PersonEntity> personEntityOpt = persoRepository.findByIdAndEliminado(id, false);
 		if (personEntityOpt.isPresent()) {
 			PersonEntity personEntity = personEntityOpt.get();
