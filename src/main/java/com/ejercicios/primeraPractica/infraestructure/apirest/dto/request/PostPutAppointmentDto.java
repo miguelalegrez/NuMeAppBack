@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppointmentRequest {
+public class PostPutAppointmentDto {
 	@NotNull
 	@NotBlank
-	private String patientDocument;
+	private String patientId;
 	@NotNull
 	@NotBlank
 	private String nutritionistId;

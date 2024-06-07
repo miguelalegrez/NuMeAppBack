@@ -1,5 +1,6 @@
 package com.ejercicios.primeraPractica.infraestructure.repository.mongodb.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import com.ejercicios.primeraPractica.application.port.output.AppointmentRepositoryOutputPort;
+import com.ejercicios.primeraPractica.application.util.Errors;
+import com.ejercicios.primeraPractica.domain.exception.BusinessException;
 import com.ejercicios.primeraPractica.domain.model.Appointment;
-import com.ejercicios.primeraPractica.domain.model.PersonType;
 import com.ejercicios.primeraPractica.infraestructure.repository.mongodb.entity.AppointmentEntity;
+import com.ejercicios.primeraPractica.infraestructure.repository.mongodb.entity.PersonEntity;
 import com.ejercicios.primeraPractica.infraestructure.repository.mongodb.mapper.AppointmentToAppointmentEntityMapper;
 
 import jakarta.validation.Valid;
@@ -24,6 +27,9 @@ public class AppointmentRepositoryService implements AppointmentRepositoryOutput
 
 	@Autowired
 	AppointmentRepository appointmentRepository;
+
+	@Autowired
+	PersonRepository personRepository;
 
 	@Autowired
 	AppointmentToAppointmentEntityMapper appointmentEntityMapper;
@@ -38,35 +44,48 @@ public class AppointmentRepositoryService implements AppointmentRepositoryOutput
 		return appointmentEntityMapper.fromOutputToInput(appointments);
 	}
 
+	// Get appointment by APPOINTMENT ID (NOT USER ID)
 	@Override
 	@Cacheable(value = "appointments", key = "#id")
 	public Optional<Appointment> getAppointmentById(@Valid String id) {
 		log.debug("getAppointmentById");
 
-		Optional<AppointmentEntity> entityOpt = appointmentRepository.findByIdAndEliminado(id, false);
+		Optional<AppointmentEntity> entityOpt = appointmentRepository.findById(id);
 		return appointmentEntityMapper.fromOutputToInput(entityOpt);
 
 	}
 
+	// Get appointment by PERSON ID
 	@Override
-	@Cacheable(value = "appointments", key = "#pageable")
-	public Page<Appointment> getAppointmentsByType(@Valid PersonType type, Pageable pageable) {
-		log.debug("getAppointmentsByType");
+	@Cacheable(value = "appointments", key = "#id")
+	public Page<Appointment> getAppointmentsByPersonId(String personId, Pageable pageable) throws BusinessException {
+		log.debug("getAppointmentsByPersonId");
 
-		Page<AppointmentEntity> entityOpt = appointmentRepository.findByEliminadoAndType(false, type, pageable);
-		return appointmentEntityMapper.fromOutputToInput(entityOpt);
+		Optional<PersonEntity> personOpt = personRepository.findById(personId);
+		if (personOpt.isPresent()) {
+			PersonEntity person = personOpt.get();
+			List<String> appointmentIds = person.getAppointmentId();
 
+			Page<AppointmentEntity> appointmentEntities = appointmentRepository.findByIdIn(appointmentIds, pageable);
+			return appointmentEntities.map(appointmentEntityMapper::fromOutputToInput);
+		} else {
+			throw new BusinessException(Errors.PERSON_NOT_FOUND);
+		}
 	}
 
 	@Override
 	@CacheEvict(value = "appointments", allEntries = true)
-	public String addAppointment(@Valid Appointment appointment) {
+	public Appointment addAppointment(@Valid Appointment appointment) {
 		log.debug("addAppointment");
 
+		// Convertir el objeto Appointment a AppointmentEntity
 		AppointmentEntity appointmentEntity = appointmentEntityMapper.fromInputToOutput(appointment);
-		AppointmentEntity savedAppointment = appointmentRepository.save(appointmentEntity);
 
-		return savedAppointment.getId();
+		// Guardar la entidad en el repositorio
+		AppointmentEntity savedAppointmentEntity = appointmentRepository.save(appointmentEntity);
+
+		// Convertir la entidad guardada de nuevo a Appointment
+		return appointmentEntityMapper.fromOutputToInput(savedAppointmentEntity);
 	}
 
 	@Override

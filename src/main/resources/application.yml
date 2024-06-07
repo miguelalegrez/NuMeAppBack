@@ -5,7 +5,7 @@ spring:
     mongodb:
       host: localhost
       port: 27017
-      database: numeapp-db
+      database: pruebas
 server:
   port: 8081
 

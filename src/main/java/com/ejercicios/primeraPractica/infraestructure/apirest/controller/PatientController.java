@@ -30,8 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/users")
-public class PersonController {
+@RequestMapping("/patients")
+public class PatientController {
 
 	@Autowired
 	PersonService personService;
@@ -43,19 +43,6 @@ public class PersonController {
 	PersonToPostPutPersonMapper personToPostPutDtoMapper;
 
 	@GetMapping
-	public ResponseEntity getAllPerson(Pageable pageable) {
-		log.debug("getAllPerson");
-		Page<Person> persons;
-		try {
-			persons = personService.getAllPerson(pageable);
-		} catch (BusinessException e) {
-			log.error("Error getting users", e);
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
-		return ResponseEntity.ok(personToPersonDto.fromInputToOutput(persons));
-	}
-
-	@GetMapping("/patients")
 	public ResponseEntity getPatients(Pageable pageable) {
 		log.debug("getPatients");
 		Page<Person> patients;
@@ -68,19 +55,6 @@ public class PersonController {
 		return ResponseEntity.ok(personToPersonDto.fromInputToOutput(patients));
 	}
 
-	@GetMapping("/nutritionists")
-	public ResponseEntity getNutritionists(Pageable pageable) {
-		log.debug("getNutritionists");
-		Page<Person> nutritionists;
-		try {
-			nutritionists = personService.getPersonsByType(PersonType.NUTRITIONIST, pageable);
-		} catch (BusinessException e) {
-			log.error("Error getting users", e);
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
-		return ResponseEntity.ok(personToPersonDto.fromInputToOutput(nutritionists));
-	}
-
 	@GetMapping("/{id}")
 	public ResponseEntity getPersonById(@PathVariable("id") String id) {
 		Optional<Person> persoOpt = personService.getPersonById(id);
@@ -90,7 +64,7 @@ public class PersonController {
 		return ResponseEntity.notFound().build();
 	}
 
-	@PostMapping("/patients")
+	@PostMapping
 	public ResponseEntity addPatient(@Valid @RequestBody PostPutPersonDto personDto) {
 		try {
 			Person patient = personToPostPutDtoMapper.fromOutputToInput(personDto);
@@ -101,22 +75,6 @@ public class PersonController {
 			log.error("Error creating patient", e);
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
-	}
-
-	@PostMapping("/nutritionists")
-	public ResponseEntity addNutritionist(@Valid @RequestBody PostPutPersonDto personDto) {
-
-		try {
-			Person nutritionist = personToPostPutDtoMapper.fromOutputToInput(personDto);
-			String idNewNutritionist = personService.createNutritionist(nutritionist);
-			URI locationHeader = createUri(idNewNutritionist);
-			return ResponseEntity.created(locationHeader).build();
-
-		} catch (BusinessException e) {
-			log.error("Error creating nutritionist", e);
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
-
 	}
 
 	@PutMapping("/{id}")
@@ -130,10 +88,7 @@ public class PersonController {
 			log.error("Error modifyng user", e);
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
-
-		URI locationHeader = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand().toUri();
-
-		return ResponseEntity.created(locationHeader).build();
+		return ResponseEntity.ok(domain);
 
 	}
 

@@ -48,7 +48,7 @@ public class PersonService implements PersonServiceInputPort {
 		if (pageable.getPageSize() > Constants.MAXIMUM_PAGINATION) {
 			throw new BusinessException(Errors.MAXIMUM_PAGINATION_EXCEEDED);
 		}
-		return personRepository.getPersonsByType(type, pageable);
+		return personRepository.getPersonsByPersonType(type, pageable);
 	}
 
 	@Override

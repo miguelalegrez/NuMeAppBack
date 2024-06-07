@@ -8,5 +8,6 @@ public class Errors {
 	public static final String MAXIMUM_PAGINATION_EXCEEDED = "MAXIMUM_PAGINATION_EXCEEDED";
 	public static final String PERSON_NOT_FOUND = "PERSON_NOT_FOUND";
 	public static final String INVALID_PERSON_TYPE = "INVALID_PERSON_TYPE";
+	public static final String APPOINTMENT_NOT_FOUND = "APPOINTMENT_NOT_FOUND";
 
 }

@@ -18,12 +18,12 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 @AllArgsConstructor
 @NoArgsConstructor
-@Document("PERSON")
+@Document("PERSONS")
 public class PersonEntity {
 
 	@Id
 	private String id;
-	private PersonTypeEntity type;
+	private PersonTypeEntity personType;
 	private PersonalInfo persoInfo;
 	private List<String> appointmentId;
 	private List<String> medicalRecordId;

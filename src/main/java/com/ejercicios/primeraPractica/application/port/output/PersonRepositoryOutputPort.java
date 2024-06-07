@@ -14,7 +14,7 @@ public interface PersonRepositoryOutputPort {
 
 	Page<Person> getAllPerson(@Valid Pageable pageable);
 
-	Page<Person> getPersonsByType(@Valid PersonType type, Pageable pageable);
+	Page<Person> getPersonsByPersonType(@Valid PersonType type, Pageable pageable);
 
 	Optional<Person> getPersonById(@Valid String id);
 

@@ -36,10 +36,10 @@ public class PersonRepositoryService implements PersonRepositoryOutputPort {
 
 	@Override
 	@Cacheable(value = "persons", key = "#pageable")
-	public Page<Person> getPersonsByType(@Valid PersonType type, Pageable pageable) {
+	public Page<Person> getPersonsByPersonType(@Valid PersonType type, Pageable pageable) {
 		log.debug("getPersonsByType");
 
-		Page<PersonEntity> personTypeList = persoRepository.findByEliminadoAndType(false, type, pageable);
+		Page<PersonEntity> personTypeList = persoRepository.findByEliminadoAndPersonType(false, type, pageable);
 		return personToPersonEntityMapper.fromOutputToInput(personTypeList);
 	}
 
@@ -78,7 +78,6 @@ public class PersonRepositoryService implements PersonRepositoryOutputPort {
 	public void modifyPerson(@Valid Person person) {
 		log.debug("modifyPerson");
 
-		Optional<PersonEntity> existingPersonEntity = persoRepository.findByIdAndEliminado(person.getId(), false);
 		PersonEntity personEntity = personToPersonEntityMapper.fromInputToOutput(person);
 		persoRepository.save(personEntity);
 	}
