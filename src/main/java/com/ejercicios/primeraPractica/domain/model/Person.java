@@ -14,10 +14,9 @@ import lombok.NoArgsConstructor;
 
 public class Person {
 	private String id;
-	private PersonType type;
+	private PersonType personType;
 	private PersonalInfo persoInfo;
 	private List<String> appointmentId;
 	private List<String> medicalRecordId;
-	// Cargamos el ID y no la lista entera para que no pese tanto
 
 }

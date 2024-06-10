@@ -61,11 +61,14 @@ public class AppointmentRepositoryService implements AppointmentRepositoryOutput
 	public Page<Appointment> getAppointmentsByPersonId(String personId, Pageable pageable) throws BusinessException {
 		log.debug("getAppointmentsByPersonId");
 
+		// Primero busco a la persona por su id
 		Optional<PersonEntity> personOpt = personRepository.findById(personId);
 		if (personOpt.isPresent()) {
 			PersonEntity person = personOpt.get();
+			// Recopilo los ids de sus CITAS
 			List<String> appointmentIds = person.getAppointmentId();
 
+			// Las busco a través del repositorio con la lista
 			Page<AppointmentEntity> appointmentEntities = appointmentRepository.findByIdIn(appointmentIds, pageable);
 			return appointmentEntities.map(appointmentEntityMapper::fromOutputToInput);
 		} else {

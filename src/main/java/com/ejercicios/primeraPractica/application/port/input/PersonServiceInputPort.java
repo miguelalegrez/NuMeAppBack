@@ -13,8 +13,6 @@ import jakarta.validation.Valid;
 
 public interface PersonServiceInputPort {
 
-	Page<Person> getAllPerson(@Valid Pageable pageable) throws BusinessException;
-
 	Page<Person> getPersonsByType(@Valid PersonType type, Pageable pageable) throws BusinessException;
 
 	Optional<Person> getPersonById(@Valid String id) throws BusinessException;

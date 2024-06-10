@@ -28,19 +28,18 @@ public class PersonRepositoryService implements PersonRepositoryOutputPort {
 	@Autowired
 	PersonToPersonEntityMapper personToPersonEntityMapper;
 
-	public Page<Person> getAllPerson(@Valid Pageable pageable) {
-		log.debug("getAllPerson");
-		Page<PersonEntity> personsList = persoRepository.findByEliminado(false, pageable);
-		return personToPersonEntityMapper.fromOutputToInput(personsList);
-	}
-
 	@Override
 	@Cacheable(value = "persons", key = "#pageable")
 	public Page<Person> getPersonsByPersonType(@Valid PersonType type, Pageable pageable) {
-		log.debug("getPersonsByType");
+		log.debug("getPersonsByPersonType - type: {}, pageable: {}", type, pageable);
 
-		Page<PersonEntity> personTypeList = persoRepository.findByEliminadoAndPersonType(false, type, pageable);
-		return personToPersonEntityMapper.fromOutputToInput(personTypeList);
+		Page<PersonEntity> personEntities = persoRepository.findByEliminadoAndPersonType(false, type, pageable);
+		log.debug("Found personEntities: {}", personEntities.getContent());
+
+		Page<Person> persons = personToPersonEntityMapper.fromOutputToInput(personEntities);
+		log.debug("Mapped persons: {}", persons.getContent());
+
+		return persons;
 	}
 
 	@Override

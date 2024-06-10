@@ -15,9 +15,7 @@ import com.ejercicios.primeraPractica.domain.exception.BusinessException;
 import com.ejercicios.primeraPractica.domain.model.Appointment;
 import com.ejercicios.primeraPractica.domain.model.Person;
 import com.ejercicios.primeraPractica.domain.model.PersonType;
-import com.ejercicios.primeraPractica.infraestructure.apirest.dto.request.PostPutAppointmentDto;
 
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,31 +42,34 @@ public class AppointmentService {
 	}
 
 	// Add appointment
-	@Transactional
-	public Optional<String> addAppointment(PostPutAppointmentDto appointmentRequest) throws BusinessException {
-		Optional<String> exitId = Optional.empty();
+	public String addAppointment(Appointment appointment) throws BusinessException {
+
+		if (appointment == null) {
+			throw new IllegalArgumentException("El objeto appointment no puede ser null.");
+		}
+		String exitId = null;
 
 		// Buscar al paciente por su id
-		Optional<Person> personOpt = personRepository.getPersonById(appointmentRequest.getPatientId());
-		if (personOpt.isPresent()) {
-			Person person = personOpt.get();
+		Optional<Person> patientOpt = personRepository.getPersonById(appointment.getPatientId());
+		if (patientOpt.isPresent() && patientOpt.get().getPersonType() == PersonType.PATIENT) {
+			Person patientPerson = patientOpt.get();
 
 			// Validar que el nutricionista existe
-			Optional<Person> nutritionistOpt = personRepository.getPersonById(appointmentRequest.getNutritionistId());
-			if (nutritionistOpt.isPresent() && nutritionistOpt.get().getType() == PersonType.NUTRITIONIST) {
+			Optional<Person> nutritionistOpt = personRepository.getPersonById(appointment.getNutritionistId());
+			if (nutritionistOpt.isPresent() && nutritionistOpt.get().getPersonType() == PersonType.NUTRITIONIST) {
 				Person nutriPerson = nutritionistOpt.get();
 
 				// Establecer los IDs del paciente y del nutricionista en la cita
-				Appointment appointment = appointmentRequest.getAppointment();
-				appointment.setPatientId(appointmentRequest.getPatientId());
+				appointment.setPatientId(patientPerson.getId()); // Establecer el ID correcto del paciente
+				appointment.setNutritionistId(nutriPerson.getId()); // Establecer el ID correcto del nutricionista
 
 				// Guardar la cita
 				Appointment savedAppointment = appointmentRepoOutputPort.addAppointment(appointment);
-				exitId = Optional.ofNullable(savedAppointment.getId());
+				exitId = savedAppointment.getId();
 
 				// Añadir el ID de la cita a la lista de IDs de citas del paciente
-				person.getAppointmentId().add(savedAppointment.getId());
-				personRepository.modifyPerson(person);
+				patientPerson.getAppointmentId().add(savedAppointment.getId());
+				personRepository.modifyPerson(patientPerson);
 
 				// Añadir el ID de la cita a la lista de IDs de citas del nutricionista
 				nutriPerson.getAppointmentId().add(savedAppointment.getId());
@@ -107,6 +108,28 @@ public class AppointmentService {
 		} else {
 			throw new BusinessException(Errors.PERSON_NOT_FOUND);
 		}
+	}
+
+	// modify Appointment
+	public void modifyAppointment(Appointment appointment) throws BusinessException {
+		log.debug("modifyAppointment");
+
+		Optional<Appointment> foundAppointment = appointmentRepoOutputPort.getAppointmentById(appointment.getId());
+		if (!foundAppointment.isPresent()) {
+			throw new BusinessException(Errors.APPOINTMENT_NOT_FOUND);
+		}
+		appointmentRepoOutputPort.modifyAppointment(appointment);
+	}
+
+	public void deleteAppointment(String id) throws BusinessException {
+		log.debug("deleteAppointment");
+		Optional<Appointment> foundAppointment = appointmentRepoOutputPort.getAppointmentById(id);
+		if (!foundAppointment.isPresent()) {
+			throw new BusinessException(Errors.APPOINTMENT_NOT_FOUND);
+
+		}
+		appointmentRepoOutputPort.deleteAppointment(id);
+
 	}
 
 }

@@ -1,16 +1,20 @@
-package com.ejercicios.primeraPractica.infraestructure.apirest.dto.request;
+package com.ejercicios.primeraPractica.infraestructure.apirest.dto.response;
 
 import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.jackson.Jacksonized;
 
 @Data
+@Builder
+@Jacksonized
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostPutAppointmentDto {
+public class AppointmentDto {
 	@NotNull
 	private LocalDateTime date;
 	@NotNull

@@ -44,19 +44,20 @@ public class PatientController {
 
 	@GetMapping
 	public ResponseEntity getPatients(Pageable pageable) {
-		log.debug("getPatients");
+		log.debug("getPatients - pageable: {}", pageable);
 		Page<Person> patients;
 		try {
 			patients = personService.getPersonsByType(PersonType.PATIENT, pageable);
+			log.debug("Retrieved patients: {}", patients.getContent());
+			return ResponseEntity.ok(personToPersonDto.fromInputToOutput(patients));
 		} catch (BusinessException e) {
 			log.error("Error getting users", e);
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
-		return ResponseEntity.ok(personToPersonDto.fromInputToOutput(patients));
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity getPersonById(@PathVariable("id") String id) {
+	public ResponseEntity getPatientById(@PathVariable("id") String id) {
 		Optional<Person> persoOpt = personService.getPersonById(id);
 		if (persoOpt.isPresent()) {
 			return ResponseEntity.ok(persoOpt.get());
@@ -78,9 +79,10 @@ public class PatientController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity modifyPerson(@Valid @PathVariable String id, @RequestBody PostPutPersonDto personDto) {
+	public ResponseEntity modifyPerson(@PathVariable("id") String id, @RequestBody PostPutPersonDto personDto) {
 
 		Person domain = personToPostPutDtoMapper.fromOutputToInput(personDto);
+		domain.setId(id);
 
 		try {
 			personService.modifyPerson(domain);

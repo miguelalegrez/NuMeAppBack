@@ -81,21 +81,17 @@ public class NutritionistController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity modifyPerson(@Valid @PathVariable String id, @RequestBody PostPutPersonDto personDto) {
-
-		Person domain = personToPostPutDtoMapper.fromOutputToInput(personDto);
-
+	public ResponseEntity<?> modifyPerson(@PathVariable String id, @Valid @RequestBody PostPutPersonDto personDto) {
 		try {
+			Person domain = personToPostPutDtoMapper.fromOutputToInput(personDto);
+			domain.setId(id); // Asignar el ID al objeto de dominio
+
 			personService.modifyPerson(domain);
+			return ResponseEntity.ok().build();
 		} catch (BusinessException e) {
-			log.error("Error modifyng user", e);
+			log.error("Error modifying user", e);
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
-
-		URI locationHeader = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand().toUri();
-
-		return ResponseEntity.created(locationHeader).build();
-
 	}
 
 	@DeleteMapping("/{id}")

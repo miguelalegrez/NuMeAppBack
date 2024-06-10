@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-06-06T20:25:15+0200",
+    date = "2024-06-09T12:46:48+0200",
     comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.36.0.v20231114-0937, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
@@ -32,7 +32,7 @@ public class PersonToPostPutPersonMapperImpl implements PersonToPostPutPersonMap
             postPutPersonDto.medicalRecordId( new ArrayList<String>( list1 ) );
         }
         postPutPersonDto.persoInfo( input.getPersoInfo() );
-        postPutPersonDto.type( input.getType() );
+        postPutPersonDto.personType( input.getPersonType() );
 
         return postPutPersonDto.build();
     }
@@ -54,7 +54,7 @@ public class PersonToPostPutPersonMapperImpl implements PersonToPostPutPersonMap
             person.medicalRecordId( new ArrayList<String>( list1 ) );
         }
         person.persoInfo( output.getPersoInfo() );
-        person.type( output.getType() );
+        person.personType( output.getPersonType() );
 
         return person.build();
     }

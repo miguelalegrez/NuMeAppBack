@@ -17,6 +17,7 @@ public interface AppointmentRepository extends MongoRepository<AppointmentEntity
 
 	Optional<AppointmentEntity> findById(String id);
 
+	// Obtiene un listado de citas obtenidas del usuario
 	Page<AppointmentEntity> findByIdIn(List<String> ids, Pageable pageable);
 
 }

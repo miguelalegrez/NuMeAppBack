@@ -18,8 +18,7 @@ import lombok.extern.jackson.Jacksonized;
 @AllArgsConstructor
 public class PersonDto {
 
-	private String id;
-	private PersonType type;
+	private PersonType personType;
 	private PersonalInfo persoInfo;
 	private List<String> appointmentId;
 	private List<String> medicalRecordId;

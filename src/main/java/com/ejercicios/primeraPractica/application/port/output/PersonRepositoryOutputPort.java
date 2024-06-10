@@ -12,9 +12,7 @@ import jakarta.validation.Valid;
 
 public interface PersonRepositoryOutputPort {
 
-	Page<Person> getAllPerson(@Valid Pageable pageable);
-
-	Page<Person> getPersonsByPersonType(@Valid PersonType type, Pageable pageable);
+	Page<Person> getPersonsByPersonType(@Valid PersonType personType, Pageable pageable);
 
 	Optional<Person> getPersonById(@Valid String id);
 

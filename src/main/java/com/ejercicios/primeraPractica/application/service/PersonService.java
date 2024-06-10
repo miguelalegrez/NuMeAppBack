@@ -31,16 +31,6 @@ public class PersonService implements PersonServiceInputPort {
 	@Autowired
 	private DniValidator dniValidator;
 
-	public Page<Person> getAllPerson(@Valid Pageable pageable) throws BusinessException {
-		log.debug("getAllPerson");
-
-		if (pageable.getPageSize() > Constants.MAXIMUM_PAGINATION) {
-			throw new BusinessException(Errors.MAXIMUM_PAGINATION_EXCEEDED);
-		}
-
-		return personRepository.getAllPerson(pageable);
-	}
-
 	@Override
 	public Page<Person> getPersonsByType(@Valid PersonType type, Pageable pageable) throws BusinessException {
 		log.debug("getPersonByType");
@@ -70,7 +60,7 @@ public class PersonService implements PersonServiceInputPort {
 	public String createPatient(@Valid Person person) throws BusinessException {
 		log.debug("createPatient");
 
-		if (person.getType() != PersonType.PATIENT) {
+		if (person.getPersonType() != PersonType.PATIENT) {
 			throw new BusinessException(Errors.INVALID_PERSON_TYPE);
 		}
 
@@ -95,7 +85,7 @@ public class PersonService implements PersonServiceInputPort {
 	public String createNutritionist(@Valid Person person) throws BusinessException {
 		log.debug("createNutritionist");
 
-		if (person.getType() != PersonType.NUTRITIONIST) {
+		if (person.getPersonType() != PersonType.NUTRITIONIST) {
 			throw new BusinessException(Errors.INVALID_PERSON_TYPE);
 		}
 
@@ -126,6 +116,9 @@ public class PersonService implements PersonServiceInputPort {
 		}
 		personRepository.modifyPerson(person);
 	}
+
+	// Realizar el PATCH para que no se pueda modificar todo el contenido de la
+	// persona
 
 	@Override
 	public void deletePerson(@Valid String id) throws BusinessException {

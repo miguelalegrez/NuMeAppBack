@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.ejercicios.primeraPractica.domain.model.PersonType;
 import com.ejercicios.primeraPractica.domain.model.PersonalInfo;
 
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ public class PersonEntity {
 
 	@Id
 	private String id;
-	private PersonTypeEntity personType;
+	private PersonType personType;
 	private PersonalInfo persoInfo;
 	private List<String> appointmentId;
 	private List<String> medicalRecordId;
