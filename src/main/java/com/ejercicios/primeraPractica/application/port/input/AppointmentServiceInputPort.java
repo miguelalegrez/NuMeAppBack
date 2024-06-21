@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.ejercicios.primeraPractica.domain.exception.BusinessException;
 import com.ejercicios.primeraPractica.domain.model.Appointment;
 import com.ejercicios.primeraPractica.domain.model.PersonType;
 
@@ -12,16 +13,18 @@ import jakarta.validation.Valid;
 
 public interface AppointmentServiceInputPort {
 
-	Page<Appointment> getAppointments(@Valid Pageable pageable);
+	Page<Appointment> getAppointments(@Valid Pageable pageable) throws BusinessException;
 
-	Page<Appointment> getAppointmentsByType(@Valid PersonType type, Pageable pageable);
+	Page<Appointment> getAppointmentsByType(@Valid PersonType type, Pageable pageable) throws BusinessException;
 
-	String addAppointment(@Valid Appointment appointment);
+	String addAppointment(@Valid Appointment appointment) throws BusinessException;
 
-	Optional<Appointment> getAppointmentById(@Valid String id);
+	Optional<Appointment> getAppointmentById(@Valid String id) throws BusinessException;
 
-	void modifyAppointment(@Valid Appointment appointment);
+	void modifyAppointment(@Valid Appointment appointment) throws BusinessException;
 
-	void deleteAppointment(@Valid String id);
+	public void modifyPartialAppointment(Appointment appointment) throws BusinessException;
+
+	void deleteAppointment(@Valid String id) throws BusinessException;
 
 }

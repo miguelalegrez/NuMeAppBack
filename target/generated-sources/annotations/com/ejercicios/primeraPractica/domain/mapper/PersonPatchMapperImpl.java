@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-06-09T12:46:48+0200",
+    date = "2024-06-21T08:04:02+0200",
     comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.36.0.v20231114-0937, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
@@ -27,9 +27,6 @@ public class PersonPatchMapperImpl implements PersonPatchMapper {
                 output.getAppointmentId().clear();
                 output.getAppointmentId().addAll( list );
             }
-            else {
-                output.setAppointmentId( null );
-            }
         }
         else {
             List<String> list = input.getAppointmentId();
@@ -37,15 +34,14 @@ public class PersonPatchMapperImpl implements PersonPatchMapper {
                 output.setAppointmentId( new ArrayList<String>( list ) );
             }
         }
-        output.setId( input.getId() );
+        if ( input.getId() != null ) {
+            output.setId( input.getId() );
+        }
         if ( output.getMedicalRecordId() != null ) {
             List<String> list1 = input.getMedicalRecordId();
             if ( list1 != null ) {
                 output.getMedicalRecordId().clear();
                 output.getMedicalRecordId().addAll( list1 );
-            }
-            else {
-                output.setMedicalRecordId( null );
             }
         }
         else {
@@ -60,10 +56,9 @@ public class PersonPatchMapperImpl implements PersonPatchMapper {
             }
             update( output.getPersoInfo(), input.getPersoInfo() );
         }
-        else {
-            output.setPersoInfo( null );
+        if ( input.getPersonType() != null ) {
+            output.setPersonType( input.getPersonType() );
         }
-        output.setPersonType( input.getPersonType() );
     }
 
     @Override
@@ -72,9 +67,17 @@ public class PersonPatchMapperImpl implements PersonPatchMapper {
             return;
         }
 
-        output.setDocument( input.getDocument() );
-        output.setDocumentType( input.getDocumentType() );
-        output.setName( input.getName() );
-        output.setSurname( input.getSurname() );
+        if ( input.getDocument() != null ) {
+            output.setDocument( input.getDocument() );
+        }
+        if ( input.getDocumentType() != null ) {
+            output.setDocumentType( input.getDocumentType() );
+        }
+        if ( input.getName() != null ) {
+            output.setName( input.getName() );
+        }
+        if ( input.getSurname() != null ) {
+            output.setSurname( input.getSurname() );
+        }
     }
 }

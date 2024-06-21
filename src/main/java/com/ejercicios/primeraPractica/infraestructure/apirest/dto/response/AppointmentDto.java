@@ -19,6 +19,15 @@ public class AppointmentDto {
 	private LocalDateTime date;
 	@NotNull
 	private String patientId;
+	private String patientName;
+	private String patientSurname;
+	@NotNull
+	private String patientDocument;
 	@NotNull
 	private String nutritionistId;
+	private String nutritionistName;
+	private String nutritionistSurname;
+	@NotNull
+	private String nutritionistDocument;
+
 }

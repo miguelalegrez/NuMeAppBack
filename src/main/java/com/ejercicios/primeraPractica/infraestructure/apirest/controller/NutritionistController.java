@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,13 +23,17 @@ import com.ejercicios.primeraPractica.application.service.PersonService;
 import com.ejercicios.primeraPractica.domain.exception.BusinessException;
 import com.ejercicios.primeraPractica.domain.model.Person;
 import com.ejercicios.primeraPractica.domain.model.PersonType;
+import com.ejercicios.primeraPractica.infraestructure.apirest.dto.request.PatchPersonDto;
 import com.ejercicios.primeraPractica.infraestructure.apirest.dto.request.PostPutPersonDto;
+import com.ejercicios.primeraPractica.infraestructure.apirest.mapper.PersonToPatchPersonMapper;
 import com.ejercicios.primeraPractica.infraestructure.apirest.mapper.PersonToPersonDtoMapper;
 import com.ejercicios.primeraPractica.infraestructure.apirest.mapper.PersonToPostPutPersonMapper;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
+@CrossOrigin(origins = "http://localhost:4200")
+@SuppressWarnings("rawtypes")
 @Slf4j
 @RestController
 @RequestMapping("/nutritionists")
@@ -42,6 +48,9 @@ public class NutritionistController {
 	@Autowired
 	PersonToPostPutPersonMapper personToPostPutDtoMapper;
 
+	@Autowired
+	PersonToPatchPersonMapper personToPatchDtoMapper;
+
 	@GetMapping
 	public ResponseEntity getNutritionists(Pageable pageable) {
 		log.debug("getNutritionists");
@@ -55,8 +64,8 @@ public class NutritionistController {
 		return ResponseEntity.ok(personToPersonDto.fromInputToOutput(nutritionists));
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity getPersonById(@PathVariable("id") String id) {
+	@GetMapping("/{nutritionistId}")
+	public ResponseEntity getPersonById(@PathVariable("nutritionistId") String id) {
 		Optional<Person> persoOpt = personService.getPersonById(id);
 		if (persoOpt.isPresent()) {
 			return ResponseEntity.ok(persoOpt.get());
@@ -81,7 +90,7 @@ public class NutritionistController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<?> modifyPerson(@PathVariable String id, @Valid @RequestBody PostPutPersonDto personDto) {
+	public ResponseEntity modifyPerson(@PathVariable String id, @Valid @RequestBody PostPutPersonDto personDto) {
 		try {
 			Person domain = personToPostPutDtoMapper.fromOutputToInput(personDto);
 			domain.setId(id); // Asignar el ID al objeto de dominio
@@ -94,7 +103,21 @@ public class NutritionistController {
 		}
 	}
 
-	@DeleteMapping("/{id}")
+	@PatchMapping("/{nutritionistId}")
+	public ResponseEntity modifyPartialPerson(@PathVariable("nutritionistId") String id,
+			@RequestBody PatchPersonDto personDto) {
+		log.debug("modifyPartialPerson: {}", id);
+		Person domain = personToPatchDtoMapper.fromOutputToInput(personDto);
+		try {
+			personService.modifyPartialPerson(domain);
+		} catch (BusinessException e) {
+			log.error("Error modifying nutritionist");
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+		return ResponseEntity.noContent().build();
+	}
+
+	@DeleteMapping("/{nutritionist-id}")
 	public ResponseEntity deleteUser(@Valid @PathVariable("user-id") String id) {
 		log.debug("deleteUser");
 

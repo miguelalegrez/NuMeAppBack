@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-06-09T12:46:48+0200",
+    date = "2024-06-21T08:04:02+0200",
     comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.36.0.v20231114-0937, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
@@ -21,13 +21,18 @@ public class AppointmentToPostPutAppointmentMapperImpl implements AppointmentToP
             return null;
         }
 
-        PostPutAppointmentDto postPutAppointmentDto = new PostPutAppointmentDto();
+        PostPutAppointmentDto.PostPutAppointmentDtoBuilder postPutAppointmentDto = PostPutAppointmentDto.builder();
 
-        postPutAppointmentDto.setDate( input.getDate() );
-        postPutAppointmentDto.setNutritionistId( input.getNutritionistId() );
-        postPutAppointmentDto.setPatientId( input.getPatientId() );
+        postPutAppointmentDto.date( input.getDate() );
+        postPutAppointmentDto.nutritionistDocument( input.getNutritionistDocument() );
+        postPutAppointmentDto.nutritionistId( input.getNutritionistId() );
+        postPutAppointmentDto.nutritionistName( input.getNutritionistName() );
+        postPutAppointmentDto.patientDocument( input.getPatientDocument() );
+        postPutAppointmentDto.patientId( input.getPatientId() );
+        postPutAppointmentDto.patientName( input.getPatientName() );
+        postPutAppointmentDto.patientSurname( input.getPatientSurname() );
 
-        return postPutAppointmentDto;
+        return postPutAppointmentDto.build();
     }
 
     @Override
@@ -39,8 +44,13 @@ public class AppointmentToPostPutAppointmentMapperImpl implements AppointmentToP
         Appointment appointment = new Appointment();
 
         appointment.setDate( output.getDate() );
+        appointment.setNutritionistDocument( output.getNutritionistDocument() );
         appointment.setNutritionistId( output.getNutritionistId() );
+        appointment.setNutritionistName( output.getNutritionistName() );
+        appointment.setPatientDocument( output.getPatientDocument() );
         appointment.setPatientId( output.getPatientId() );
+        appointment.setPatientName( output.getPatientName() );
+        appointment.setPatientSurname( output.getPatientSurname() );
 
         return appointment;
     }

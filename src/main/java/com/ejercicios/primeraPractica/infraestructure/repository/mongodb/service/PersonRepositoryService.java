@@ -30,10 +30,10 @@ public class PersonRepositoryService implements PersonRepositoryOutputPort {
 
 	@Override
 	@Cacheable(value = "persons", key = "#pageable")
-	public Page<Person> getPersonsByPersonType(@Valid PersonType type, Pageable pageable) {
-		log.debug("getPersonsByPersonType - type: {}, pageable: {}", type, pageable);
+	public Page<Person> getPersonsByPersonType(@Valid PersonType personType, Pageable pageable) {
+		log.debug("getPersonsByPersonType - type: {}, pageable: {}", personType, pageable);
 
-		Page<PersonEntity> personEntities = persoRepository.findByEliminadoAndPersonType(false, type, pageable);
+		Page<PersonEntity> personEntities = persoRepository.findByPersonTypeAndEliminado(personType, false, pageable);
 		log.debug("Found personEntities: {}", personEntities.getContent());
 
 		Page<Person> persons = personToPersonEntityMapper.fromOutputToInput(personEntities);
@@ -51,12 +51,11 @@ public class PersonRepositoryService implements PersonRepositoryOutputPort {
 		return personToPersonEntityMapper.fromOutputToInput(personEntity);
 	}
 
-	// get user by personal document to validate if exists in db.
 	@Override
 	public Optional<Person> findByPersoInfoDocument(@Valid String document) {
 		log.debug("findByPersoInfoDocument");
 
-		Optional<PersonEntity> personEntityOpt = persoRepository.findByPersoInfoDocument(document);
+		Optional<PersonEntity> personEntityOpt = persoRepository.findByPersoInfoDocument(document, false);
 		return personToPersonEntityMapper.fromOutputToInput(personEntityOpt);
 	}
 

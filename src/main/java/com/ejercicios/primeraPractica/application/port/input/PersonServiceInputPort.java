@@ -23,6 +23,8 @@ public interface PersonServiceInputPort {
 
 	void modifyPerson(@Valid Person person) throws BusinessException;
 
+	public void modifyPartialPerson(@Valid Person person) throws BusinessException;
+
 	void deletePerson(@Valid String id) throws BusinessException;
 
 	Optional<Person> findByPersoInfoDocument(String document) throws BusinessException;

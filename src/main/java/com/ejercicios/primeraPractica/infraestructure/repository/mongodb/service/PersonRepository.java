@@ -15,14 +15,12 @@ import com.ejercicios.primeraPractica.infraestructure.repository.mongodb.entity.
 @EnableMongoRepositories
 public interface PersonRepository extends MongoRepository<PersonEntity, String> {
 
-	Page<PersonEntity> findByPersonType(PersonType personType, Pageable pageable);
-
-	Optional<PersonEntity> findByPersoInfoDocument(String document);
+	Optional<PersonEntity> findByPersoInfoDocument(String document, boolean eliminado);
 
 	Page<PersonEntity> findByEliminado(boolean eliminado, Pageable pageable);
 
 	Optional<PersonEntity> findByIdAndEliminado(String id, boolean eliminado);
 
-	Page<PersonEntity> findByEliminadoAndPersonType(boolean eliminado, PersonType personType, Pageable pageable);
+	Page<PersonEntity> findByPersonTypeAndEliminado(PersonType personType, boolean eliminado, Pageable pageable);
 
 }

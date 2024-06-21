@@ -15,9 +15,11 @@ import com.ejercicios.primeraPractica.application.util.Constants;
 import com.ejercicios.primeraPractica.application.util.DniValidator;
 import com.ejercicios.primeraPractica.application.util.Errors;
 import com.ejercicios.primeraPractica.domain.exception.BusinessException;
+import com.ejercicios.primeraPractica.domain.mapper.PersonPatchMapper;
 import com.ejercicios.primeraPractica.domain.model.Person;
 import com.ejercicios.primeraPractica.domain.model.PersonType;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,16 +31,20 @@ public class PersonService implements PersonServiceInputPort {
 	private PersonRepositoryOutputPort personRepository;
 
 	@Autowired
+	PersonPatchMapper personPatchMapper;
+
+	@Autowired
 	private DniValidator dniValidator;
 
 	@Override
-	public Page<Person> getPersonsByType(@Valid PersonType type, Pageable pageable) throws BusinessException {
+	@Transactional
+	public Page<Person> getPersonsByType(@Valid PersonType personType, Pageable pageable) throws BusinessException {
 		log.debug("getPersonByType");
 
 		if (pageable.getPageSize() > Constants.MAXIMUM_PAGINATION) {
 			throw new BusinessException(Errors.MAXIMUM_PAGINATION_EXCEEDED);
 		}
-		return personRepository.getPersonsByPersonType(type, pageable);
+		return personRepository.getPersonsByPersonType(personType, pageable);
 	}
 
 	@Override
@@ -57,6 +63,7 @@ public class PersonService implements PersonServiceInputPort {
 	}
 
 	@Override
+	@Transactional
 	public String createPatient(@Valid Person person) throws BusinessException {
 		log.debug("createPatient");
 
@@ -82,6 +89,7 @@ public class PersonService implements PersonServiceInputPort {
 	}
 
 	@Override
+	@Transactional
 	public String createNutritionist(@Valid Person person) throws BusinessException {
 		log.debug("createNutritionist");
 
@@ -107,6 +115,7 @@ public class PersonService implements PersonServiceInputPort {
 	}
 
 	@Override
+	@Transactional
 	public void modifyPerson(@Valid Person person) throws BusinessException {
 		log.debug("modifyPerson");
 
@@ -117,10 +126,22 @@ public class PersonService implements PersonServiceInputPort {
 		personRepository.modifyPerson(person);
 	}
 
-	// Realizar el PATCH para que no se pueda modificar todo el contenido de la
-	// persona
+	@Override
+	@Transactional
+	public void modifyPartialPerson(@Valid Person person) throws BusinessException {
+		log.debug("modifyPartialPerson");
+
+		Optional<Person> foundPerson = personRepository.getPersonById(person.getId());
+		if (!foundPerson.isPresent()) {
+			throw new BusinessException(Errors.PERSON_NOT_FOUND);
+		}
+		Person updated = foundPerson.get();
+		personPatchMapper.update(updated, person);
+		personRepository.modifyPerson(updated);
+	}
 
 	@Override
+	@Transactional
 	public void deletePerson(@Valid String id) throws BusinessException {
 		log.debug("deletePerson");
 

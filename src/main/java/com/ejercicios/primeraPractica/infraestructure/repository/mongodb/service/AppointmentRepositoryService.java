@@ -50,7 +50,7 @@ public class AppointmentRepositoryService implements AppointmentRepositoryOutput
 	public Optional<Appointment> getAppointmentById(@Valid String id) {
 		log.debug("getAppointmentById");
 
-		Optional<AppointmentEntity> entityOpt = appointmentRepository.findById(id);
+		Optional<AppointmentEntity> entityOpt = appointmentRepository.findByIdAndEliminado(id, false);
 		return appointmentEntityMapper.fromOutputToInput(entityOpt);
 
 	}
@@ -62,7 +62,7 @@ public class AppointmentRepositoryService implements AppointmentRepositoryOutput
 		log.debug("getAppointmentsByPersonId");
 
 		// Primero busco a la persona por su id
-		Optional<PersonEntity> personOpt = personRepository.findById(personId);
+		Optional<PersonEntity> personOpt = personRepository.findByIdAndEliminado(personId, false);
 		if (personOpt.isPresent()) {
 			PersonEntity person = personOpt.get();
 			// Recopilo los ids de sus CITAS
@@ -83,6 +83,7 @@ public class AppointmentRepositoryService implements AppointmentRepositoryOutput
 
 		// Convertir el objeto Appointment a AppointmentEntity
 		AppointmentEntity appointmentEntity = appointmentEntityMapper.fromInputToOutput(appointment);
+		appointmentEntity.setEliminado(false);
 
 		// Guardar la entidad en el repositorio
 		AppointmentEntity savedAppointmentEntity = appointmentRepository.save(appointmentEntity);
@@ -105,7 +106,12 @@ public class AppointmentRepositoryService implements AppointmentRepositoryOutput
 	public void deleteAppointment(@Valid String id) {
 		log.debug("deleteAppointment");
 
-		appointmentRepository.deleteById(id);
+		Optional<AppointmentEntity> appointmentEntityOpt = appointmentRepository.findByIdAndEliminado(id, false);
+		if (appointmentEntityOpt.isPresent()) {
+			AppointmentEntity medicalRecordEntity = appointmentEntityOpt.get();
+			medicalRecordEntity.setEliminado(true);
+			appointmentRepository.save(medicalRecordEntity);
+		}
 	}
 
 }

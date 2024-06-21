@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-06-09T12:46:48+0200",
+    date = "2024-06-21T08:04:02+0200",
     comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.36.0.v20231114-0937, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
@@ -25,8 +25,14 @@ public class AppointmentToAppointmentEntityMapperImpl implements AppointmentToAp
 
         appointmentEntity.date( input.getDate() );
         appointmentEntity.id( input.getId() );
+        appointmentEntity.nutritionistDocument( input.getNutritionistDocument() );
         appointmentEntity.nutritionistId( input.getNutritionistId() );
+        appointmentEntity.nutritionistName( input.getNutritionistName() );
+        appointmentEntity.nutritionistSurname( input.getNutritionistSurname() );
+        appointmentEntity.patientDocument( input.getPatientDocument() );
         appointmentEntity.patientId( input.getPatientId() );
+        appointmentEntity.patientName( input.getPatientName() );
+        appointmentEntity.patientSurname( input.getPatientSurname() );
 
         return appointmentEntity.build();
     }
@@ -41,8 +47,14 @@ public class AppointmentToAppointmentEntityMapperImpl implements AppointmentToAp
 
         appointment.setDate( output.getDate() );
         appointment.setId( output.getId() );
+        appointment.setNutritionistDocument( output.getNutritionistDocument() );
         appointment.setNutritionistId( output.getNutritionistId() );
+        appointment.setNutritionistName( output.getNutritionistName() );
+        appointment.setNutritionistSurname( output.getNutritionistSurname() );
+        appointment.setPatientDocument( output.getPatientDocument() );
         appointment.setPatientId( output.getPatientId() );
+        appointment.setPatientName( output.getPatientName() );
+        appointment.setPatientSurname( output.getPatientSurname() );
 
         return appointment;
     }

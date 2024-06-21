@@ -17,6 +17,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Jacksonized
 public class PostPutPersonDto {
+
 	private PersonType personType;
 	private PersonalInfo persoInfo;
 	private List<String> appointmentId;

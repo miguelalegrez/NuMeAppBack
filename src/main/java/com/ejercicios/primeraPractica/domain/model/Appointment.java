@@ -16,5 +16,11 @@ public class Appointment {
 	private String id;
 	private LocalDateTime date;
 	private String patientId;
+	private String patientName;
+	private String patientSurname;
+	private String patientDocument;
 	private String nutritionistId;
+	private String nutritionistName;
+	private String nutritionistSurname;
+	private String nutritionistDocument;
 }

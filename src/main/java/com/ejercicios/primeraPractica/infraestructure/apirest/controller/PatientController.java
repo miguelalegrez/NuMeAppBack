@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,13 +23,17 @@ import com.ejercicios.primeraPractica.application.service.PersonService;
 import com.ejercicios.primeraPractica.domain.exception.BusinessException;
 import com.ejercicios.primeraPractica.domain.model.Person;
 import com.ejercicios.primeraPractica.domain.model.PersonType;
+import com.ejercicios.primeraPractica.infraestructure.apirest.dto.request.PatchPersonDto;
 import com.ejercicios.primeraPractica.infraestructure.apirest.dto.request.PostPutPersonDto;
+import com.ejercicios.primeraPractica.infraestructure.apirest.mapper.PersonToPatchPersonMapper;
 import com.ejercicios.primeraPractica.infraestructure.apirest.mapper.PersonToPersonDtoMapper;
 import com.ejercicios.primeraPractica.infraestructure.apirest.mapper.PersonToPostPutPersonMapper;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
+@CrossOrigin(origins = "http://localhost:4200")
+@SuppressWarnings("rawtypes")
 @Slf4j
 @RestController
 @RequestMapping("/patients")
@@ -40,13 +46,17 @@ public class PatientController {
 	PersonToPersonDtoMapper personToPersonDto;
 
 	@Autowired
+	PersonToPatchPersonMapper personToPatchDtoMapper;
+
+	@Autowired
 	PersonToPostPutPersonMapper personToPostPutDtoMapper;
 
 	@GetMapping
 	public ResponseEntity getPatients(Pageable pageable) {
 		log.debug("getPatients - pageable: {}", pageable);
-		Page<Person> patients;
+
 		try {
+			Page<Person> patients;
 			patients = personService.getPersonsByType(PersonType.PATIENT, pageable);
 			log.debug("Retrieved patients: {}", patients.getContent());
 			return ResponseEntity.ok(personToPersonDto.fromInputToOutput(patients));
@@ -56,8 +66,10 @@ public class PatientController {
 		}
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity getPatientById(@PathVariable("id") String id) {
+	@GetMapping("/{patientId}")
+	public ResponseEntity getPatientById(@PathVariable("patientId") String id) {
+		log.debug("getPatientById -", id);
+
 		Optional<Person> persoOpt = personService.getPersonById(id);
 		if (persoOpt.isPresent()) {
 			return ResponseEntity.ok(persoOpt.get());
@@ -78,8 +90,9 @@ public class PatientController {
 		}
 	}
 
-	@PutMapping("/{id}")
-	public ResponseEntity modifyPerson(@PathVariable("id") String id, @RequestBody PostPutPersonDto personDto) {
+	@PutMapping("/{patient-id}")
+	public ResponseEntity modifyPerson(@PathVariable("patient-id") String id, @RequestBody PostPutPersonDto personDto) {
+		log.debug("modifyPerson: {}", id);
 
 		Person domain = personToPostPutDtoMapper.fromOutputToInput(personDto);
 		domain.setId(id);
@@ -91,11 +104,23 @@ public class PatientController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 		return ResponseEntity.ok(domain);
-
 	}
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity deleteUser(@Valid @PathVariable("user-id") String id) {
+	@PatchMapping("/{patient-id}")
+	public ResponseEntity modifyPartialPerson(@PathVariable("id") String id, @RequestBody PatchPersonDto personDto) {
+		log.debug("modifyPartialPerson: {}", id);
+		Person domain = personToPatchDtoMapper.fromOutputToInput(personDto);
+		try {
+			personService.modifyPartialPerson(domain);
+		} catch (BusinessException e) {
+			log.error("Error modifying patient");
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+		return ResponseEntity.noContent().build();
+	}
+
+	@DeleteMapping("/{patient-id}")
+	public ResponseEntity deleteUser(@Valid @PathVariable("id") String id) {
 		log.debug("deleteUser");
 
 		try {
