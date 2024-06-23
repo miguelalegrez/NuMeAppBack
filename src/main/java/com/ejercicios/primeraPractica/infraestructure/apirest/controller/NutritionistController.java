@@ -117,8 +117,8 @@ public class NutritionistController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@DeleteMapping("/{nutritionist-id}")
-	public ResponseEntity deleteUser(@Valid @PathVariable("user-id") String id) {
+	@DeleteMapping("/{nutritionistId}")
+	public ResponseEntity deleteUser(@Valid @PathVariable("nutritionistId") String id) {
 		log.debug("deleteUser");
 
 		try {

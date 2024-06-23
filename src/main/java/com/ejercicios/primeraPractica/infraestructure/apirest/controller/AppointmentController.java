@@ -65,8 +65,8 @@ public class AppointmentController {
 	}
 
 	// appointment by APPOINTMENT id
-	@GetMapping("/{appointment-id}")
-	public ResponseEntity getAppointmentById(@PathVariable("id") String id) throws BusinessException {
+	@GetMapping("/{appointmentId}")
+	public ResponseEntity getAppointmentById(@PathVariable("appointmentId") String id) throws BusinessException {
 		Optional<Appointment> appointment = appService.getAppointmentById(id);
 		if (appointment.isPresent()) {
 			return ResponseEntity.ok(appointment.get());
@@ -103,7 +103,7 @@ public class AppointmentController {
 		}
 	}
 
-	@PutMapping("/{appointment-id}")
+	@PutMapping("/{appointmentId}")
 	public ResponseEntity modifyAppointment(@PathVariable("id") String id,
 			@Valid @RequestBody PostPutAppointmentDto appointmentDto) {
 		log.debug("modifyAppointment");
@@ -120,8 +120,8 @@ public class AppointmentController {
 		}
 	}
 
-	@PatchMapping("/{appointment-id}")
-	public ResponseEntity modifyPartialAppointment(@PathVariable("id") String id,
+	@PatchMapping("/{appointmentId}")
+	public ResponseEntity modifyPartialAppointment(@PathVariable("appointmentId") String id,
 			@Valid @RequestBody PatchAppointmentDto patchAppointmentDto) {
 		log.debug("modifyAppointment");
 
@@ -137,8 +137,8 @@ public class AppointmentController {
 		}
 	}
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity deleteAppointment(@Valid @PathVariable("id") String id) {
+	@DeleteMapping("/{appointmentId}")
+	public ResponseEntity deleteAppointment(@Valid @PathVariable("appointmentId") String id) {
 		log.debug("deleteAppointment");
 
 		try {

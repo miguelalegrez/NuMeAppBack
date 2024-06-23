@@ -16,6 +16,7 @@ import lombok.extern.jackson.Jacksonized;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MedicalRecordDto {
+	private String id;
 	private LocalDateTime date;
 	private RegistryType registryType;
 	private String observations;

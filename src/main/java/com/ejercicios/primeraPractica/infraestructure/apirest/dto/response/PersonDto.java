@@ -18,7 +18,7 @@ import lombok.extern.jackson.Jacksonized;
 @AllArgsConstructor
 public class PersonDto {
 	// Para poder usar el id en el front debo de incluir el id en la response
-	String id;
+	private String id;
 	private PersonType personType;
 	private PersonalInfo persoInfo;
 	private List<String> appointmentId;

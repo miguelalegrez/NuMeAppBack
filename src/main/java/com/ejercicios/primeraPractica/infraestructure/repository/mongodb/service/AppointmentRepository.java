@@ -22,4 +22,6 @@ public interface AppointmentRepository extends MongoRepository<AppointmentEntity
 
 	Optional<AppointmentEntity> findByIdAndEliminado(String id, boolean eliminado);
 
+	Page<AppointmentEntity> findAllByEliminado(boolean eliminado, Pageable pageable);
+
 }

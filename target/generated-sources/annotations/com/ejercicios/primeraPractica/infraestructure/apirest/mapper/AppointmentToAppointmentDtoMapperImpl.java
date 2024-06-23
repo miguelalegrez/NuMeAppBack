@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-06-21T08:04:02+0200",
+    date = "2024-06-22T20:58:02+0200",
     comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.36.0.v20231114-0937, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
@@ -24,6 +24,7 @@ public class AppointmentToAppointmentDtoMapperImpl implements AppointmentToAppoi
         AppointmentDto.AppointmentDtoBuilder appointmentDto = AppointmentDto.builder();
 
         appointmentDto.date( input.getDate() );
+        appointmentDto.id( input.getId() );
         appointmentDto.nutritionistDocument( input.getNutritionistDocument() );
         appointmentDto.nutritionistId( input.getNutritionistId() );
         appointmentDto.nutritionistName( input.getNutritionistName() );
@@ -34,27 +35,6 @@ public class AppointmentToAppointmentDtoMapperImpl implements AppointmentToAppoi
         appointmentDto.patientSurname( input.getPatientSurname() );
 
         return appointmentDto.build();
-    }
-
-    @Override
-    public Appointment fromOutputToInput(AppointmentDto output) {
-        if ( output == null ) {
-            return null;
-        }
-
-        Appointment appointment = new Appointment();
-
-        appointment.setDate( output.getDate() );
-        appointment.setNutritionistDocument( output.getNutritionistDocument() );
-        appointment.setNutritionistId( output.getNutritionistId() );
-        appointment.setNutritionistName( output.getNutritionistName() );
-        appointment.setNutritionistSurname( output.getNutritionistSurname() );
-        appointment.setPatientDocument( output.getPatientDocument() );
-        appointment.setPatientId( output.getPatientId() );
-        appointment.setPatientName( output.getPatientName() );
-        appointment.setPatientSurname( output.getPatientSurname() );
-
-        return appointment;
     }
 
     @Override
@@ -69,6 +49,28 @@ public class AppointmentToAppointmentDtoMapperImpl implements AppointmentToAppoi
         }
 
         return list;
+    }
+
+    @Override
+    public Appointment fromOutputToInput(AppointmentDto output) {
+        if ( output == null ) {
+            return null;
+        }
+
+        Appointment appointment = new Appointment();
+
+        appointment.setDate( output.getDate() );
+        appointment.setId( output.getId() );
+        appointment.setNutritionistDocument( output.getNutritionistDocument() );
+        appointment.setNutritionistId( output.getNutritionistId() );
+        appointment.setNutritionistName( output.getNutritionistName() );
+        appointment.setNutritionistSurname( output.getNutritionistSurname() );
+        appointment.setPatientDocument( output.getPatientDocument() );
+        appointment.setPatientId( output.getPatientId() );
+        appointment.setPatientName( output.getPatientName() );
+        appointment.setPatientSurname( output.getPatientSurname() );
+
+        return appointment;
     }
 
     @Override

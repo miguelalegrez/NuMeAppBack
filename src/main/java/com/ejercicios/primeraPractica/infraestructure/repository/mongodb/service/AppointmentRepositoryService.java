@@ -39,7 +39,7 @@ public class AppointmentRepositoryService implements AppointmentRepositoryOutput
 	public Page<Appointment> getAppointments(@Valid Pageable pageable) {
 		log.debug("getAppointments");
 
-		Page<AppointmentEntity> appointments = appointmentRepository.findAll(pageable);
+		Page<AppointmentEntity> appointments = appointmentRepository.findAllByEliminado(false, pageable);
 
 		return appointmentEntityMapper.fromOutputToInput(appointments);
 	}
@@ -108,9 +108,9 @@ public class AppointmentRepositoryService implements AppointmentRepositoryOutput
 
 		Optional<AppointmentEntity> appointmentEntityOpt = appointmentRepository.findByIdAndEliminado(id, false);
 		if (appointmentEntityOpt.isPresent()) {
-			AppointmentEntity medicalRecordEntity = appointmentEntityOpt.get();
-			medicalRecordEntity.setEliminado(true);
-			appointmentRepository.save(medicalRecordEntity);
+			AppointmentEntity appointmentEntity = appointmentEntityOpt.get();
+			appointmentEntity.setEliminado(true);
+			appointmentRepository.save(appointmentEntity);
 		}
 	}
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-06-21T08:04:02+0200",
+    date = "2024-06-22T20:57:50+0200",
     comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.36.0.v20231114-0937, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
@@ -39,6 +39,20 @@ public class PersonToPersonDtoMapperImpl implements PersonToPersonDtoMapper {
     }
 
     @Override
+    public List<PersonDto> fromInputToOutput(List<Person> inputList) {
+        if ( inputList == null ) {
+            return null;
+        }
+
+        List<PersonDto> list = new ArrayList<PersonDto>( inputList.size() );
+        for ( Person person : inputList ) {
+            list.add( fromInputToOutput( person ) );
+        }
+
+        return list;
+    }
+
+    @Override
     public Person fromOutputToInput(PersonDto output) {
         if ( output == null ) {
             return null;
@@ -59,20 +73,6 @@ public class PersonToPersonDtoMapperImpl implements PersonToPersonDtoMapper {
         person.personType( output.getPersonType() );
 
         return person.build();
-    }
-
-    @Override
-    public List<PersonDto> fromInputToOutput(List<Person> inputList) {
-        if ( inputList == null ) {
-            return null;
-        }
-
-        List<PersonDto> list = new ArrayList<PersonDto>( inputList.size() );
-        for ( Person person : inputList ) {
-            list.add( fromInputToOutput( person ) );
-        }
-
-        return list;
     }
 
     @Override

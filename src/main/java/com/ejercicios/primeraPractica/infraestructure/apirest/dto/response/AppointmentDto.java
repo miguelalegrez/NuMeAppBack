@@ -15,6 +15,7 @@ import lombok.extern.jackson.Jacksonized;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AppointmentDto {
+	private String id;
 	@NotNull
 	private LocalDateTime date;
 	@NotNull

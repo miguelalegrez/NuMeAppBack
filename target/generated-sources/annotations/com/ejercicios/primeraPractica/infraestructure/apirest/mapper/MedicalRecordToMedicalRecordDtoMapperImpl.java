@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-06-21T08:04:02+0200",
+    date = "2024-06-22T20:57:56+0200",
     comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.36.0.v20231114-0937, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
@@ -24,29 +24,13 @@ public class MedicalRecordToMedicalRecordDtoMapperImpl implements MedicalRecordT
         MedicalRecordDto.MedicalRecordDtoBuilder medicalRecordDto = MedicalRecordDto.builder();
 
         medicalRecordDto.date( input.getDate() );
+        medicalRecordDto.id( input.getId() );
         medicalRecordDto.nutritionistId( input.getNutritionistId() );
         medicalRecordDto.observations( input.getObservations() );
         medicalRecordDto.patientId( input.getPatientId() );
         medicalRecordDto.registryType( input.getRegistryType() );
 
         return medicalRecordDto.build();
-    }
-
-    @Override
-    public MedicalRecord fromOutputToInput(MedicalRecordDto output) {
-        if ( output == null ) {
-            return null;
-        }
-
-        MedicalRecord medicalRecord = new MedicalRecord();
-
-        medicalRecord.setDate( output.getDate() );
-        medicalRecord.setNutritionistId( output.getNutritionistId() );
-        medicalRecord.setObservations( output.getObservations() );
-        medicalRecord.setPatientId( output.getPatientId() );
-        medicalRecord.setRegistryType( output.getRegistryType() );
-
-        return medicalRecord;
     }
 
     @Override
@@ -61,6 +45,24 @@ public class MedicalRecordToMedicalRecordDtoMapperImpl implements MedicalRecordT
         }
 
         return list;
+    }
+
+    @Override
+    public MedicalRecord fromOutputToInput(MedicalRecordDto output) {
+        if ( output == null ) {
+            return null;
+        }
+
+        MedicalRecord medicalRecord = new MedicalRecord();
+
+        medicalRecord.setDate( output.getDate() );
+        medicalRecord.setId( output.getId() );
+        medicalRecord.setNutritionistId( output.getNutritionistId() );
+        medicalRecord.setObservations( output.getObservations() );
+        medicalRecord.setPatientId( output.getPatientId() );
+        medicalRecord.setRegistryType( output.getRegistryType() );
+
+        return medicalRecord;
     }
 
     @Override

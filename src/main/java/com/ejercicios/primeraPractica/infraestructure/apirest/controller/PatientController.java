@@ -90,8 +90,8 @@ public class PatientController {
 		}
 	}
 
-	@PutMapping("/{patient-id}")
-	public ResponseEntity modifyPerson(@PathVariable("patient-id") String id, @RequestBody PostPutPersonDto personDto) {
+	@PutMapping("/{patientId}")
+	public ResponseEntity modifyPerson(@PathVariable("patientId") String id, @RequestBody PostPutPersonDto personDto) {
 		log.debug("modifyPerson: {}", id);
 
 		Person domain = personToPostPutDtoMapper.fromOutputToInput(personDto);
@@ -106,8 +106,9 @@ public class PatientController {
 		return ResponseEntity.ok(domain);
 	}
 
-	@PatchMapping("/{patient-id}")
-	public ResponseEntity modifyPartialPerson(@PathVariable("id") String id, @RequestBody PatchPersonDto personDto) {
+	@PatchMapping("/{patientId}")
+	public ResponseEntity modifyPartialPerson(@PathVariable("patientId") String id,
+			@RequestBody PatchPersonDto personDto) {
 		log.debug("modifyPartialPerson: {}", id);
 		Person domain = personToPatchDtoMapper.fromOutputToInput(personDto);
 		try {
@@ -119,8 +120,8 @@ public class PatientController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@DeleteMapping("/{patient-id}")
-	public ResponseEntity deleteUser(@Valid @PathVariable("id") String id) {
+	@DeleteMapping("/{patientId}")
+	public ResponseEntity deleteUser(@Valid @PathVariable("patientId") String id) {
 		log.debug("deleteUser");
 
 		try {
