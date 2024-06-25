@@ -21,5 +21,4 @@ public class MedicalRecordDto {
 	private RegistryType registryType;
 	private String observations;
 	private String patientId;
-	private String nutritionistId;
 }

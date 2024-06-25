@@ -58,14 +58,13 @@ public class AppointmentService implements AppointmentServiceInputPort {
 		String exitId = null;
 
 		// Buscar al paciente por su documento
-		Optional<Person> patientOpt = personRepository.findByPersoInfoDocument(appointment.getPatientDocument());
+		Optional<Person> patientOpt = personRepository.getPersonById(appointment.getPatientId());
 		if (patientOpt.isPresent() && patientOpt.get().getPersonType() == PersonType.PATIENT) {
 			Person patientPerson = patientOpt.get();
 			log.debug("Paciente encontrado: {}", patientPerson);
 
 			// Buscar al nutricionista por su documento
-			Optional<Person> nutritionistOpt = personRepository
-					.findByPersoInfoDocument(appointment.getNutritionistDocument());
+			Optional<Person> nutritionistOpt = personRepository.getPersonById(appointment.getNutritionistId());
 			if (nutritionistOpt.isPresent() && nutritionistOpt.get().getPersonType() == PersonType.NUTRITIONIST) {
 				Person nutriPerson = nutritionistOpt.get();
 				log.debug("Nutricionista encontrado: {}", nutriPerson);

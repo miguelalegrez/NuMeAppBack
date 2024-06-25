@@ -1,6 +1,7 @@
 package com.ejercicios.primeraPractica.application.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import com.ejercicios.primeraPractica.domain.model.MedicalRecord;
 import com.ejercicios.primeraPractica.domain.model.Person;
 import com.ejercicios.primeraPractica.domain.model.PersonType;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -59,38 +61,25 @@ public class MedicalRecordService implements MedicalRecordServiceInputPort {
 		if (patientOpt.isPresent() && patientOpt.get().getPersonType() == PersonType.PATIENT) {
 			Person patientPerson = patientOpt.get();
 
-			Optional<Person> nutritionistOpt = personRepository.getPersonById(medicalRecord.getNutritionistId());
-			if (nutritionistOpt.isPresent() && nutritionistOpt.get().getPersonType() == PersonType.NUTRITIONIST) {
-				Person nutriPerson = nutritionistOpt.get();
+			// Obtenemos la ficha médica y seteamos los datos de la visita
+			medicalRecord.setPatientId(patientPerson.getId());
+			medicalRecord.setDate(LocalDateTime.now());
 
-				// Obtenemos la ficha médica y seteamos los datos de la visita
-				medicalRecord.setPatientId(patientPerson.getId());
-				medicalRecord.setDate(LocalDateTime.now());
-				medicalRecord.setNutritionistId(nutriPerson.getId());
+			// Guardamos la nueva ficha médica en su repo
+			MedicalRecord savedMedicalRecord = medicalRecordRepositoryOutputPort.addMedicalRecord(medicalRecord);
+			exitId = savedMedicalRecord.getId();
 
-				// Guardamos la nueva ficha médica en su repo
-				MedicalRecord savedMedicalRecord = medicalRecordRepositoryOutputPort.addMedicalRecord(medicalRecord);
-				exitId = savedMedicalRecord.getId();
+			// Actualizamos la persona con el id generado de la ficha
+			Person patientForSave = patientOpt.get();
+			patientForSave.getMedicalRecordId().add(savedMedicalRecord.getId());
+			personRepository.modifyPerson(patientPerson);
 
-				// Actualizamos la persona con el id generado de la ficha
-				Person patientForSave = patientOpt.get();
-				patientForSave.getMedicalRecordId().add(savedMedicalRecord.getId());
-				personRepository.modifyPerson(patientPerson);
-
-				Person nutriForSave = nutritionistOpt.get();
-				nutriForSave.getMedicalRecordId().add(savedMedicalRecord.getId());
-				personRepository.modifyPerson(nutriPerson);
-
-			} else {
-
-				// Manejar el caso en que no exista alguna persona
-				throw new BusinessException(Errors.PERSON_NOT_FOUND);
-			}
 		} else {
 
-			// Manejar el caso en el que el paciente no exista
+			// Manejar el caso en que no exista alguna persona
 			throw new BusinessException(Errors.PERSON_NOT_FOUND);
 		}
+
 		return exitId;
 	}
 
@@ -104,6 +93,23 @@ public class MedicalRecordService implements MedicalRecordServiceInputPort {
 			return mmedicalRecordOpt;
 		} else {
 			throw new BusinessException(Errors.MEDICAL_RECORD_NOT_FOUND);
+		}
+	}
+
+	@Transactional
+	public Page<MedicalRecord> getMedicalRecordsByPersonId(String id, Pageable pageable) throws BusinessException {
+		log.debug("getPatientReports");
+
+		Optional<Person> personOpt = personRepository.getPersonById(id);
+		if (personOpt.isPresent()) {
+			Person person = personOpt.get();
+			List<String> medicalRecordsIds = person.getMedicalRecordId();
+			if (medicalRecordsIds.isEmpty()) {
+				throw new BusinessException("No medical records found for the person.");
+			}
+			return medicalRecordRepositoryOutputPort.getMedicalRecordsByPersonId(person.getId(), pageable);
+		} else {
+			throw new BusinessException(Errors.PERSON_NOT_FOUND);
 		}
 	}
 

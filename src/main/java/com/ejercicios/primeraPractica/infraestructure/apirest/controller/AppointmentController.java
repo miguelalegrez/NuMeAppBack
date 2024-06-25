@@ -104,7 +104,7 @@ public class AppointmentController {
 	}
 
 	@PutMapping("/{appointmentId}")
-	public ResponseEntity modifyAppointment(@PathVariable("id") String id,
+	public ResponseEntity modifyAppointment(@PathVariable("appointmentId") String id,
 			@Valid @RequestBody PostPutAppointmentDto appointmentDto) {
 		log.debug("modifyAppointment");
 

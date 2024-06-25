@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-06-21T08:04:02+0200",
+    date = "2024-06-25T09:21:57+0200",
     comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.36.0.v20231114-0937, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
@@ -20,7 +20,6 @@ public class MedicalRecordPatchMapperImpl implements MedicalRecordPatchMapper {
 
         output.setDate( input.getDate() );
         output.setId( input.getId() );
-        output.setNutritionistId( input.getNutritionistId() );
         output.setObservations( input.getObservations() );
         output.setPatientId( input.getPatientId() );
         output.setRegistryType( input.getRegistryType() );

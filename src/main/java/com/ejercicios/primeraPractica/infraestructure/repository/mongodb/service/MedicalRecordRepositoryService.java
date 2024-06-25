@@ -61,9 +61,12 @@ public class MedicalRecordRepositoryService implements MedicalRecordRepositoryOu
 		if (personOpt.isPresent()) {
 			PersonEntity person = personOpt.get();
 			List<String> medicalRecordsIds = person.getMedicalRecordId();
+			if (medicalRecordsIds.isEmpty()) {
+				throw new BusinessException("No medical records found for the person.");
+			}
 
-			Page<MedicalRecordEntity> medicalRecordEntities = medicalRepository.findById(medicalRecordsIds, false,
-					pageable);
+			Page<MedicalRecordEntity> medicalRecordEntities = medicalRepository
+					.findByIdInAndEliminado(medicalRecordsIds, false, pageable);
 			return medicalRecordEntities.map(medicalRecordEntityMapper::fromOutputToInput);
 		}
 

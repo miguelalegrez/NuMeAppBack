@@ -15,7 +15,7 @@ import com.ejercicios.primeraPractica.infraestructure.repository.mongodb.entity.
 @EnableMongoRepositories
 public interface MedicalRecordRepository extends MongoRepository<MedicalRecordEntity, String> {
 	// Obtiene un listado de citas obtenidas del usuario
-	Page<MedicalRecordEntity> findById(List<String> ids, boolean eliminado, Pageable pageable);
+	Page<MedicalRecordEntity> findByIdInAndEliminado(List<String> ids, boolean eliminado, Pageable pageable);
 
 	Optional<MedicalRecordEntity> findByIdAndEliminado(String id, boolean eliminado);
 

@@ -26,7 +26,6 @@ public class MedicalRecordEntity {
 	private RegistryType registryType;
 	private String observations;
 	private String patientId;
-	private String nutritionistId;
 	private boolean eliminado;
 
 }

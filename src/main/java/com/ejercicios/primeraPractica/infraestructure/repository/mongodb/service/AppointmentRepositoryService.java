@@ -69,7 +69,8 @@ public class AppointmentRepositoryService implements AppointmentRepositoryOutput
 			List<String> appointmentIds = person.getAppointmentId();
 
 			// Las busco a través del repositorio con la lista
-			Page<AppointmentEntity> appointmentEntities = appointmentRepository.findByIdIn(appointmentIds, pageable);
+			Page<AppointmentEntity> appointmentEntities = appointmentRepository.findByEliminadoAndIdIn(false,
+					appointmentIds, pageable);
 			return appointmentEntities.map(appointmentEntityMapper::fromOutputToInput);
 		} else {
 			throw new BusinessException(Errors.PERSON_NOT_FOUND);

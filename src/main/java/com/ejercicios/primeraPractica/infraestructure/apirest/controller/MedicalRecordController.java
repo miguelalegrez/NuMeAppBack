@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @SuppressWarnings("rawtypes")
 @Slf4j
 @RestController
-@RequestMapping("/medical-records")
+@RequestMapping("/medicalrecords")
 public class MedicalRecordController {
 
 	@Autowired
@@ -62,8 +62,8 @@ public class MedicalRecordController {
 		}
 	}
 
-	@GetMapping("/{medicalrecord-id}")
-	public ResponseEntity getMedicalRecordById(@PathVariable String id) {
+	@GetMapping("/{medicalRecordId}")
+	public ResponseEntity getMedicalRecordById(@PathVariable("medicalRecordId") String id) {
 		try {
 			Optional<MedicalRecord> medicalRecord = medicalRecordService.getMedicalRecordById(id);
 			log.debug("Retrieved medical Record: {}", medicalRecord.get());
@@ -74,15 +74,22 @@ public class MedicalRecordController {
 		}
 	}
 
+	@GetMapping("/person/{personId}")
+	public ResponseEntity getMedicalRecordsByPersonId(@PathVariable String personId, Pageable pageable) {
+		try {
+			Page<MedicalRecord> medicalRecords = medicalRecordService.getMedicalRecordsByPersonId(personId, pageable);
+			return ResponseEntity.ok(medicalRecords);
+		} catch (BusinessException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+
 	@PostMapping
 	public ResponseEntity addMedicalRecord(@RequestBody PostPutMedicalRecordDto medicalRecordDto)
 			throws BusinessException {
 		MedicalRecord medicalDomain = medicalPostPutDtoMapper.fromOutputToInput(medicalRecordDto);
 
 		try {
-			medicalDomain.setNutritionistId(medicalRecordDto.getNutritionistId());
-			medicalDomain.setPatientId(medicalRecordDto.getPatientId());
-
 			String medicalRecordId = medicalRecordService.addMedicalRecord(medicalDomain);
 			URI locationHeader = createUri(medicalRecordId);
 			return ResponseEntity.created(locationHeader).build();
@@ -91,8 +98,8 @@ public class MedicalRecordController {
 		}
 	}
 
-	@PutMapping("/{medicalrecord-id}")
-	public ResponseEntity modifyMedicalRecord(@PathVariable("id") String id,
+	@PutMapping("/{medicalRecordId}")
+	public ResponseEntity modifyMedicalRecord(@PathVariable("medicalRecordId") String id,
 			@Valid @RequestBody PostPutMedicalRecordDto medicalRecordDto) {
 		log.debug("modifyMedicalRecord");
 
@@ -108,8 +115,8 @@ public class MedicalRecordController {
 		}
 	}
 
-	@PatchMapping("/{medicalrecord-id}")
-	public ResponseEntity modifyPartialMedicalRecord(@PathVariable("id") String id,
+	@PatchMapping("/{medicalRecordId}")
+	public ResponseEntity modifyPartialMedicalRecord(@PathVariable("medicalRecordId") String id,
 			@Valid @RequestBody MedicalRecordPatchDto medicalRecordDto) {
 		log.debug("modifyMedicalRecord");
 
@@ -125,8 +132,8 @@ public class MedicalRecordController {
 		}
 	}
 
-	@DeleteMapping("/{medicalrecord-id}")
-	public ResponseEntity deleteMedicalRecord(@Valid @PathVariable("id") String id) {
+	@DeleteMapping("/{medicalRecordId}")
+	public ResponseEntity deleteMedicalRecord(@Valid @PathVariable("medicalRecordId") String id) {
 		log.debug("deleteMedicalRecord");
 
 		try {
