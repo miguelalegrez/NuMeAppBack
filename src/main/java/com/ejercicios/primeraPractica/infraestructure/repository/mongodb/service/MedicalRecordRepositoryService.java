@@ -21,6 +21,9 @@ import com.ejercicios.primeraPractica.infraestructure.repository.mongodb.mapper.
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Service class for managing medical records in a MongoDB repository.
+ */
 @Slf4j
 @Component
 public class MedicalRecordRepositoryService implements MedicalRecordRepositoryOutputPort {
@@ -34,6 +37,12 @@ public class MedicalRecordRepositoryService implements MedicalRecordRepositoryOu
 	@Autowired
 	MedicalRecordToMedicalRecordEntityMapper medicalRecordEntityMapper;
 
+	/**
+	 * Retrieves all medical records with pagination.
+	 *
+	 * @param pageable the pagination information
+	 * @return a page of medical records
+	 */
 	@Override
 	@Cacheable(value = "medicalRecords", key = "#pageable")
 	public Page<MedicalRecord> getMedicalRecords(@Valid Pageable pageable) {
@@ -43,15 +52,27 @@ public class MedicalRecordRepositoryService implements MedicalRecordRepositoryOu
 		return medicalRecordEntityMapper.fromOutputToInput(medicalRecords);
 	}
 
+	/**
+	 * Retrieves a medical record by its ID.
+	 *
+	 * @param id the medical record ID
+	 * @return the medical record
+	 */
 	@Override
 	public Optional<MedicalRecord> getMedicalRecordsById(String id) {
 		log.debug("getMedicalRecordById");
 		Optional<MedicalRecordEntity> medicalRecordsbyId = medicalRepository.findByIdAndEliminado(id, false);
-
 		return medicalRecordEntityMapper.fromOutputToInput(medicalRecordsbyId);
-
 	}
 
+	/**
+	 * Retrieves medical records by person ID with pagination.
+	 *
+	 * @param id       the person ID
+	 * @param pageable the pagination information
+	 * @return a page of medical records
+	 * @throws BusinessException if the person is not found
+	 */
 	@Override
 	@Cacheable(value = "medicalRecords", key = "#id")
 	public Page<MedicalRecord> getMedicalRecordsByPersonId(@Valid String id, Pageable pageable)
@@ -73,10 +94,15 @@ public class MedicalRecordRepositoryService implements MedicalRecordRepositoryOu
 		throw new BusinessException(Errors.PERSON_NOT_FOUND);
 	}
 
+	/**
+	 * Adds a new medical record.
+	 *
+	 * @param medicalRecord the medical record to add
+	 * @return the added medical record
+	 */
 	@Override
 	@CacheEvict(value = "medicalRecords", allEntries = true)
 	public MedicalRecord addMedicalRecord(@Valid MedicalRecord medicalRecord) {
-
 		log.debug("addMedicalRecord");
 
 		MedicalRecordEntity medicalRecordEntity = medicalRecordEntityMapper.fromInputToOutput(medicalRecord);
@@ -88,6 +114,11 @@ public class MedicalRecordRepositoryService implements MedicalRecordRepositoryOu
 		return medicalRecordEntityMapper.fromOutputToInput(savedMedicalRecordEntity);
 	}
 
+	/**
+	 * Modifies an existing medical record.
+	 *
+	 * @param medicalRecord the medical record to modify
+	 */
 	@Override
 	public void modifyMedicalRecord(@Valid MedicalRecord medicalRecord) {
 		log.debug("modifyMedicalRecord");
@@ -96,6 +127,11 @@ public class MedicalRecordRepositoryService implements MedicalRecordRepositoryOu
 		medicalRepository.save(medicalRecordEntity);
 	}
 
+	/**
+	 * Deletes a medical record by its ID.
+	 *
+	 * @param id the medical record ID
+	 */
 	@Override
 	public void deleteMedicalRecord(@Valid String id) {
 		log.debug("deleteMedicalRecord");

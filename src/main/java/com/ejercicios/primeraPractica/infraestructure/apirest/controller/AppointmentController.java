@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -31,6 +32,9 @@ import com.ejercicios.primeraPractica.infraestructure.apirest.mapper.Appointment
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Rest Controller for managing appointments.
+ */
 @CrossOrigin(origins = "http://localhost:4200")
 @SuppressWarnings("rawtypes")
 @Slf4j
@@ -50,6 +54,12 @@ public class AppointmentController {
 	@Autowired
 	AppointmentToPatchAppointmentMapper appToPatchMapper;
 
+	/**
+	 * Retrieves a page of appointments.
+	 *
+	 * @param pageable the pagination information
+	 * @return a response entity containing the list of appointments
+	 */
 	@GetMapping
 	public ResponseEntity getAppointments(Pageable pageable) {
 		log.debug("getAppointments");
@@ -64,7 +74,13 @@ public class AppointmentController {
 		}
 	}
 
-	// appointment by APPOINTMENT id
+	/**
+	 * Retrieves an appointment by its ID.
+	 *
+	 * @param id the appointment ID
+	 * @return a response entity containing the appointment
+	 * @throws BusinessException if there is a business exception
+	 */
 	@GetMapping("/{appointmentId}")
 	public ResponseEntity getAppointmentById(@PathVariable("appointmentId") String id) throws BusinessException {
 		Optional<Appointment> appointment = appService.getAppointmentById(id);
@@ -74,10 +90,15 @@ public class AppointmentController {
 		return ResponseEntity.notFound().build();
 	}
 
-	// appointment by PERSON id
+	/**
+	 * Retrieves appointments by person ID.
+	 *
+	 * @param id       the person ID
+	 * @param pageable the pagination information
+	 * @return a response entity containing the list of appointments
+	 */
 	@GetMapping("/person/{id}")
-	public ResponseEntity getAppontmentsByPersonId(@PathVariable("id") String id, Pageable pageable) {
-
+	public ResponseEntity getAppointmentsByPersonId(@PathVariable("id") String id, Pageable pageable) {
 		try {
 			Page<Appointment> personAppointments = appService.getAppointmentsByPersonId(id, pageable);
 			log.debug("Retrieved appointments: {}", personAppointments.getContent());
@@ -88,6 +109,31 @@ public class AppointmentController {
 		}
 	}
 
+	/**
+	 * Retrieves appointments by person document.
+	 *
+	 * @param document the person document
+	 * @param pageable the pagination information
+	 * @return a response entity containing the list of appointments
+	 */
+	@GetMapping("/person/searchByDocument")
+	public ResponseEntity getAppointmentsByPersonDocument(@RequestParam String document, Pageable pageable) {
+		try {
+			Page<Appointment> personAppointments = appService.getAppointmentsByPersonDocument(document, pageable);
+			log.debug("Retrieved appointments: {}", personAppointments.getContent());
+			return ResponseEntity.ok(personAppointments);
+		} catch (BusinessException e) {
+			log.error("Error getting appointments", e);
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+
+	/**
+	 * Adds a new appointment.
+	 *
+	 * @param appointmentDto the appointment DTO
+	 * @return a response entity indicating the result of the operation
+	 */
 	@PostMapping
 	public ResponseEntity addAppointment(@RequestBody PostPutAppointmentDto appointmentDto) {
 		try {
@@ -103,6 +149,13 @@ public class AppointmentController {
 		}
 	}
 
+	/**
+	 * Modifies an existing appointment.
+	 *
+	 * @param id             the appointment ID
+	 * @param appointmentDto the appointment DTO
+	 * @return a response entity indicating the result of the operation
+	 */
 	@PutMapping("/{appointmentId}")
 	public ResponseEntity modifyAppointment(@PathVariable("appointmentId") String id,
 			@Valid @RequestBody PostPutAppointmentDto appointmentDto) {
@@ -120,6 +173,13 @@ public class AppointmentController {
 		}
 	}
 
+	/**
+	 * Partially modifies an existing appointment.
+	 *
+	 * @param id                  the appointment ID
+	 * @param patchAppointmentDto the appointment DTO
+	 * @return a response entity indicating the result of the operation
+	 */
 	@PatchMapping("/{appointmentId}")
 	public ResponseEntity modifyPartialAppointment(@PathVariable("appointmentId") String id,
 			@Valid @RequestBody PatchAppointmentDto patchAppointmentDto) {
@@ -137,6 +197,12 @@ public class AppointmentController {
 		}
 	}
 
+	/**
+	 * Deletes an appointment by its ID.
+	 *
+	 * @param id the appointment ID
+	 * @return a response entity indicating the result of the operation
+	 */
 	@DeleteMapping("/{appointmentId}")
 	public ResponseEntity deleteAppointment(@Valid @PathVariable("appointmentId") String id) {
 		log.debug("deleteAppointment");
@@ -150,6 +216,12 @@ public class AppointmentController {
 		}
 	}
 
+	/**
+	 * Creates a URI for the newly created appointment.
+	 *
+	 * @param appointmentId the appointment ID
+	 * @return the URI of the newly created appointment
+	 */
 	private URI createUri(String appointmentId) {
 		return ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(appointmentId).toUri();
 	}

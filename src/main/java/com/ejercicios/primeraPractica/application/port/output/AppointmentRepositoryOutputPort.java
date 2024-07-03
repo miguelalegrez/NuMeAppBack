@@ -24,4 +24,6 @@ public interface AppointmentRepositoryOutputPort {
 
 	void deleteAppointment(@Valid String id);
 
+	Page<Appointment> getAppointmentsByPersonDocument(String document, Pageable pageable);
+
 }

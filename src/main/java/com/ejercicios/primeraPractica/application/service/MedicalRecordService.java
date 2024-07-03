@@ -23,6 +23,9 @@ import com.ejercicios.primeraPractica.domain.model.PersonType;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Service class for managing medical records.
+ */
 @Slf4j
 @Service
 public class MedicalRecordService implements MedicalRecordServiceInputPort {
@@ -36,8 +39,14 @@ public class MedicalRecordService implements MedicalRecordServiceInputPort {
 	@Autowired
 	MedicalRecordPatchMapper medicalPatchMapper;
 
-	// Get all medical records
-
+	/**
+	 * Retrieves all medical records with pagination.
+	 *
+	 * @param pageable the pagination information
+	 * @return a page of medical records
+	 * @throws BusinessException if there is a business exception
+	 */
+	@Transactional
 	public Page<MedicalRecord> getMedicalRecord(Pageable pageable) throws BusinessException {
 		log.debug("getMedicalRecords");
 
@@ -48,11 +57,17 @@ public class MedicalRecordService implements MedicalRecordServiceInputPort {
 		return medicalRecordRepositoryOutputPort.getMedicalRecords(pageable);
 	}
 
-	// Add Medical Record
-
+	/**
+	 * Adds a new medical record.
+	 *
+	 * @param medicalRecord the medical record to add
+	 * @return the ID of the added medical record
+	 * @throws BusinessException if there is a business exception
+	 */
+	@Transactional
 	public String addMedicalRecord(MedicalRecord medicalRecord) throws BusinessException {
 		if (medicalRecord == null) {
-			throw new IllegalArgumentException("El objeto appointment no puede ser null.");
+			throw new IllegalArgumentException("El objeto medicalRecord no puede ser null.");
 		}
 		String exitId = null;
 
@@ -83,8 +98,14 @@ public class MedicalRecordService implements MedicalRecordServiceInputPort {
 		return exitId;
 	}
 
-	// Get Medical Record by ID
-
+	/**
+	 * Retrieves a medical record by its ID.
+	 *
+	 * @param id the medical record ID
+	 * @return the medical record
+	 * @throws BusinessException if there is a business exception
+	 */
+	@Transactional
 	public Optional<MedicalRecord> getMedicalRecordById(String id) throws BusinessException {
 		log.debug("getMedicalRecordById");
 
@@ -96,6 +117,14 @@ public class MedicalRecordService implements MedicalRecordServiceInputPort {
 		}
 	}
 
+	/**
+	 * Retrieves medical records by person ID.
+	 *
+	 * @param id       the person ID
+	 * @param pageable the pagination information
+	 * @return a page of medical records
+	 * @throws BusinessException if there is a business exception
+	 */
 	@Transactional
 	public Page<MedicalRecord> getMedicalRecordsByPersonId(String id, Pageable pageable) throws BusinessException {
 		log.debug("getPatientReports");
@@ -113,6 +142,13 @@ public class MedicalRecordService implements MedicalRecordServiceInputPort {
 		}
 	}
 
+	/**
+	 * Modifies an existing medical record.
+	 *
+	 * @param medicalRecord the medical record to modify
+	 * @throws BusinessException if there is a business exception
+	 */
+	@Transactional
 	public void modifyMedicalRecord(MedicalRecord medicalRecord) throws BusinessException {
 		log.debug("modifyMedicalRecord");
 
@@ -124,6 +160,13 @@ public class MedicalRecordService implements MedicalRecordServiceInputPort {
 		medicalRecordRepositoryOutputPort.modifyMedicalRecord(medicalRecord);
 	}
 
+	/**
+	 * Partially modifies an existing medical record.
+	 *
+	 * @param medicalRecord the medical record to modify
+	 * @throws BusinessException if there is a business exception
+	 */
+	@Transactional
 	public void modifyPartialMedicalRecord(MedicalRecord medicalRecord) throws BusinessException {
 		log.debug("modifyPartialMedicalRecord");
 
@@ -134,19 +177,24 @@ public class MedicalRecordService implements MedicalRecordServiceInputPort {
 		}
 
 		MedicalRecord updated = foundMedicalRecord.get();
-		medicalPatchMapper.update(medicalRecord, updated);
+		medicalPatchMapper.update(updated, medicalRecord);
 		medicalRecordRepositoryOutputPort.modifyMedicalRecord(updated);
 	}
 
+	/**
+	 * Deletes a medical record by its ID.
+	 *
+	 * @param id the medical record ID
+	 * @throws BusinessException if there is a business exception
+	 */
+	@Transactional
 	public void deleteMedicalRecord(String id) throws BusinessException {
 		log.debug("deleteMedicalRecord");
 		Optional<MedicalRecord> foundAppointment = medicalRecordRepositoryOutputPort.getMedicalRecordsById(id);
 		if (!foundAppointment.isPresent()) {
 			throw new BusinessException(Errors.MEDICAL_RECORD_NOT_FOUND);
-
 		}
 		medicalRecordRepositoryOutputPort.deleteMedicalRecord(id);
-
 	}
 
 }

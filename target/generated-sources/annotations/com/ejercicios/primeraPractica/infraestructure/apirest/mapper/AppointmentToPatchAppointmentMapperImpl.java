@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-06-21T08:04:02+0200",
-    comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.36.0.v20231114-0937, environment: Java 21.0.1 (Oracle Corporation)"
+    date = "2024-07-01T09:17:10+0200",
+    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.2 (Oracle Corporation)"
 )
 @Component
 public class AppointmentToPatchAppointmentMapperImpl implements AppointmentToPatchAppointmentMapper {
@@ -21,9 +21,12 @@ public class AppointmentToPatchAppointmentMapperImpl implements AppointmentToPat
             return null;
         }
 
-        PatchAppointmentDto patchAppointmentDto = new PatchAppointmentDto();
+        PatchAppointmentDto.PatchAppointmentDtoBuilder patchAppointmentDto = PatchAppointmentDto.builder();
 
-        return patchAppointmentDto;
+        patchAppointmentDto.date( input.getDate() );
+        patchAppointmentDto.nutritionistId( input.getNutritionistId() );
+
+        return patchAppointmentDto.build();
     }
 
     @Override
@@ -33,6 +36,9 @@ public class AppointmentToPatchAppointmentMapperImpl implements AppointmentToPat
         }
 
         Appointment appointment = new Appointment();
+
+        appointment.setDate( output.getDate() );
+        appointment.setNutritionistId( output.getNutritionistId() );
 
         return appointment;
     }

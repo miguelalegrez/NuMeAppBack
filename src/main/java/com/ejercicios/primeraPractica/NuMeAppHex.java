@@ -11,6 +11,7 @@ public class NuMeAppHex {
 
 	public static void main(String[] args) {
 		SpringApplication.run(NuMeAppHex.class, args);
+
 	}
 
 }

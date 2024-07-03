@@ -3,13 +3,11 @@ spring:
     name: NuMeAppHex
   data:
     mongodb:
-      host: localhost
-      port: 27017
-      database: pruebas
+      uri: mongodb://localhost:27017/pruebas
 
 server:
   port: 8082
- 
+
 logging:
   level:
     org.springframework.web: DEBUG
@@ -17,5 +15,3 @@ logging:
   file:
     path: logs
     name: spring-boot-application.log
-
-

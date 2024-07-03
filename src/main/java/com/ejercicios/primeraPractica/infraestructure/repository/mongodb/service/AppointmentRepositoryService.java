@@ -21,6 +21,9 @@ import com.ejercicios.primeraPractica.infraestructure.repository.mongodb.mapper.
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Service class for managing appointments in a MongoDB repository.
+ */
 @Slf4j
 @Component
 public class AppointmentRepositoryService implements AppointmentRepositoryOutputPort {
@@ -34,6 +37,12 @@ public class AppointmentRepositoryService implements AppointmentRepositoryOutput
 	@Autowired
 	AppointmentToAppointmentEntityMapper appointmentEntityMapper;
 
+	/**
+	 * Retrieves all appointments with pagination.
+	 *
+	 * @param pageable the pagination information
+	 * @return a page of appointments
+	 */
 	@Override
 	@Cacheable(value = "appointments", key = "#pageable")
 	public Page<Appointment> getAppointments(@Valid Pageable pageable) {
@@ -44,7 +53,12 @@ public class AppointmentRepositoryService implements AppointmentRepositoryOutput
 		return appointmentEntityMapper.fromOutputToInput(appointments);
 	}
 
-	// Get appointment by APPOINTMENT ID (NOT USER ID)
+	/**
+	 * Retrieves an appointment by its ID.
+	 *
+	 * @param id the appointment ID
+	 * @return the appointment
+	 */
 	@Override
 	@Cacheable(value = "appointments", key = "#id")
 	public Optional<Appointment> getAppointmentById(@Valid String id) {
@@ -52,23 +66,25 @@ public class AppointmentRepositoryService implements AppointmentRepositoryOutput
 
 		Optional<AppointmentEntity> entityOpt = appointmentRepository.findByIdAndEliminado(id, false);
 		return appointmentEntityMapper.fromOutputToInput(entityOpt);
-
 	}
 
-	// Get appointment by PERSON ID
+	/**
+	 * Retrieves appointments by person ID with pagination.
+	 *
+	 * @param personId the person ID
+	 * @param pageable the pagination information
+	 * @return a page of appointments
+	 * @throws BusinessException if the person is not found
+	 */
 	@Override
 	@Cacheable(value = "appointments", key = "#id")
 	public Page<Appointment> getAppointmentsByPersonId(String personId, Pageable pageable) throws BusinessException {
 		log.debug("getAppointmentsByPersonId");
 
-		// Primero busco a la persona por su id
 		Optional<PersonEntity> personOpt = personRepository.findByIdAndEliminado(personId, false);
 		if (personOpt.isPresent()) {
 			PersonEntity person = personOpt.get();
-			// Recopilo los ids de sus CITAS
 			List<String> appointmentIds = person.getAppointmentId();
-
-			// Las busco a través del repositorio con la lista
 			Page<AppointmentEntity> appointmentEntities = appointmentRepository.findByEliminadoAndIdIn(false,
 					appointmentIds, pageable);
 			return appointmentEntities.map(appointmentEntityMapper::fromOutputToInput);
@@ -77,22 +93,49 @@ public class AppointmentRepositoryService implements AppointmentRepositoryOutput
 		}
 	}
 
+	/**
+	 * Retrieves appointments by person document with pagination.
+	 *
+	 * @param document the person document
+	 * @param pageable the pagination information
+	 * @return a page of appointments
+	 */
+	@Override
+	@Cacheable(value = "appointments", key = "#document")
+	public Page<Appointment> getAppointmentsByPersonDocument(String document, Pageable pageable) {
+		log.debug("getAppointmentsByPersonDocument");
+
+		Optional<PersonEntity> personOpt = personRepository.findByPersoInfoDocumentIgnoreCaseAndEliminado(document,
+				false);
+		PersonEntity person = personOpt.get();
+		List<String> appointmentIds = person.getAppointmentId();
+		Page<AppointmentEntity> appointmentEntities = appointmentRepository.findByEliminadoAndIdIn(false,
+				appointmentIds, pageable);
+		return appointmentEntities.map(appointmentEntityMapper::fromOutputToInput);
+	}
+
+	/**
+	 * Adds a new appointment.
+	 *
+	 * @param appointment the appointment to add
+	 * @return the added appointment
+	 */
 	@Override
 	@CacheEvict(value = "appointments", allEntries = true)
 	public Appointment addAppointment(@Valid Appointment appointment) {
 		log.debug("addAppointment");
 
-		// Convertir el objeto Appointment a AppointmentEntity
 		AppointmentEntity appointmentEntity = appointmentEntityMapper.fromInputToOutput(appointment);
 		appointmentEntity.setEliminado(false);
-
-		// Guardar la entidad en el repositorio
 		AppointmentEntity savedAppointmentEntity = appointmentRepository.save(appointmentEntity);
-
-		// Convertir la entidad guardada de nuevo a Appointment
 		return appointmentEntityMapper.fromOutputToInput(savedAppointmentEntity);
 	}
 
+	/**
+	 * Modifies an existing appointment.
+	 *
+	 * @param appointment the appointment to modify
+	 */
 	@Override
 	@CacheEvict(value = "appointments", allEntries = true)
 	public void modifyAppointment(@Valid Appointment appointment) {
@@ -102,6 +145,11 @@ public class AppointmentRepositoryService implements AppointmentRepositoryOutput
 		appointmentRepository.save(appointmentEntity);
 	}
 
+	/**
+	 * Deletes an appointment by its ID.
+	 *
+	 * @param id the appointment ID
+	 */
 	@Override
 	@CacheEvict(value = "appointments", allEntries = true)
 	public void deleteAppointment(@Valid String id) {

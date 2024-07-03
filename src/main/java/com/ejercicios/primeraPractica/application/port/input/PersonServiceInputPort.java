@@ -17,6 +17,9 @@ public interface PersonServiceInputPort {
 
 	Optional<Person> getPersonById(@Valid String id) throws BusinessException;
 
+	Page<Person> getPersonByNameAndSurname(@Valid String name, String surname, Pageable pageable)
+			throws BusinessException;
+
 	String createPatient(@Valid Person person) throws BusinessException;
 
 	String createNutritionist(@Valid Person person) throws BusinessException;
@@ -28,4 +31,5 @@ public interface PersonServiceInputPort {
 	void deletePerson(@Valid String id) throws BusinessException;
 
 	Optional<Person> findByPersoInfoDocument(String document) throws BusinessException;
+
 }

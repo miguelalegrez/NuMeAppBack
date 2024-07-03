@@ -11,12 +11,21 @@ import com.ejercicios.primeraPractica.domain.model.Person;
 
 import jakarta.validation.Valid;
 
+/**
+ * Utility class for validating DNI (Document Number Identifier).
+ */
 @Component
 public class DniValidator {
+
 	@Autowired
 	PersonRepositoryOutputPort persoRepository;
 
-	// Validation id
+	/**
+	 * Validates if a person with the given document already exists.
+	 *
+	 * @param document the document number to validate
+	 * @throws BusinessException if a person with the given document already exists
+	 */
 	public void validatePersonExistsByDocument(@Valid String document) throws BusinessException {
 		Optional<Person> existingPerson = persoRepository.findByPersoInfoDocument(document);
 		if (existingPerson.isPresent()) {

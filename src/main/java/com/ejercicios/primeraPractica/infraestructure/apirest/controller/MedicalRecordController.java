@@ -1,6 +1,7 @@
 package com.ejercicios.primeraPractica.infraestructure.apirest.controller;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ import com.ejercicios.primeraPractica.infraestructure.apirest.mapper.MedicalToPa
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Rest Controller for managing medical records.
+ */
 @CrossOrigin(origins = "http://localhost:4200")
 @SuppressWarnings("rawtypes")
 @Slf4j
@@ -50,6 +54,12 @@ public class MedicalRecordController {
 	@Autowired
 	MedicalToPatchMedicalMapper medicalToPatchMapper;
 
+	/**
+	 * Retrieves a page of medical records.
+	 *
+	 * @param pageable the pagination information
+	 * @return a response entity containing the list of medical records
+	 */
 	@GetMapping
 	public ResponseEntity getMedicalRecords(Pageable pageable) {
 		try {
@@ -62,6 +72,12 @@ public class MedicalRecordController {
 		}
 	}
 
+	/**
+	 * Retrieves a medical record by its ID.
+	 *
+	 * @param id the medical record ID
+	 * @return a response entity containing the medical record
+	 */
 	@GetMapping("/{medicalRecordId}")
 	public ResponseEntity getMedicalRecordById(@PathVariable("medicalRecordId") String id) {
 		try {
@@ -69,11 +85,18 @@ public class MedicalRecordController {
 			log.debug("Retrieved medical Record: {}", medicalRecord.get());
 			return ResponseEntity.ok(medicalRecord.get());
 		} catch (BusinessException e) {
-			log.error("Error getting medicalrecord", e);
+			log.error("Error getting medical record", e);
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
 
+	/**
+	 * Retrieves medical records by person ID.
+	 *
+	 * @param personId the person ID
+	 * @param pageable the pagination information
+	 * @return a response entity containing the list of medical records
+	 */
 	@GetMapping("/person/{personId}")
 	public ResponseEntity getMedicalRecordsByPersonId(@PathVariable String personId, Pageable pageable) {
 		try {
@@ -84,6 +107,13 @@ public class MedicalRecordController {
 		}
 	}
 
+	/**
+	 * Adds a new medical record.
+	 *
+	 * @param medicalRecordDto the medical record DTO
+	 * @return a response entity indicating the result of the operation
+	 * @throws BusinessException if there is a business exception
+	 */
 	@PostMapping
 	public ResponseEntity addMedicalRecord(@RequestBody PostPutMedicalRecordDto medicalRecordDto)
 			throws BusinessException {
@@ -98,9 +128,16 @@ public class MedicalRecordController {
 		}
 	}
 
+	/**
+	 * Modifies an existing medical record.
+	 *
+	 * @param id               the medical record ID
+	 * @param medicalRecordDto the medical record DTO
+	 * @return a response entity indicating the result of the operation
+	 */
 	@PutMapping("/{medicalRecordId}")
 	public ResponseEntity modifyMedicalRecord(@PathVariable("medicalRecordId") String id,
-			@Valid @RequestBody PostPutMedicalRecordDto medicalRecordDto) {
+			@RequestBody PostPutMedicalRecordDto medicalRecordDto) {
 		log.debug("modifyMedicalRecord");
 
 		MedicalRecord domain = medicalPostPutDtoMapper.fromOutputToInput(medicalRecordDto);
@@ -115,13 +152,21 @@ public class MedicalRecordController {
 		}
 	}
 
+	/**
+	 * Partially modifies an existing medical record.
+	 *
+	 * @param id               the medical record ID
+	 * @param medicalRecordDto the medical record DTO
+	 * @return a response entity indicating the result of the operation
+	 */
 	@PatchMapping("/{medicalRecordId}")
 	public ResponseEntity modifyPartialMedicalRecord(@PathVariable("medicalRecordId") String id,
-			@Valid @RequestBody MedicalRecordPatchDto medicalRecordDto) {
+			@RequestBody MedicalRecordPatchDto medicalRecordDto) {
 		log.debug("modifyMedicalRecord");
 
 		MedicalRecord domain = medicalToPatchMapper.fromOutputToInput(medicalRecordDto);
 		domain.setId(id);
+		domain.setDate(LocalDateTime.now());
 
 		try {
 			medicalRecordService.modifyMedicalRecord(domain);
@@ -132,6 +177,12 @@ public class MedicalRecordController {
 		}
 	}
 
+	/**
+	 * Deletes a medical record by its ID.
+	 *
+	 * @param id the medical record ID
+	 * @return a response entity indicating the result of the operation
+	 */
 	@DeleteMapping("/{medicalRecordId}")
 	public ResponseEntity deleteMedicalRecord(@Valid @PathVariable("medicalRecordId") String id) {
 		log.debug("deleteMedicalRecord");
@@ -145,6 +196,12 @@ public class MedicalRecordController {
 		}
 	}
 
+	/**
+	 * Creates a URI for the newly created medical record.
+	 *
+	 * @param medicalRecordId the medical record ID
+	 * @return the URI of the newly created medical record
+	 */
 	private URI createUri(String medicalRecordId) {
 		return ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(medicalRecordId).toUri();
 	}

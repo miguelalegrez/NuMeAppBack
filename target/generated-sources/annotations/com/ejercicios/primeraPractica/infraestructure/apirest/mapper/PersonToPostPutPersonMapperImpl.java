@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-06-21T08:04:02+0200",
-    comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.36.0.v20231114-0937, environment: Java 21.0.1 (Oracle Corporation)"
+    date = "2024-07-01T09:17:10+0200",
+    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.2 (Oracle Corporation)"
 )
 @Component
 public class PersonToPostPutPersonMapperImpl implements PersonToPostPutPersonMapper {
@@ -23,6 +23,8 @@ public class PersonToPostPutPersonMapperImpl implements PersonToPostPutPersonMap
 
         PostPutPersonDto.PostPutPersonDtoBuilder postPutPersonDto = PostPutPersonDto.builder();
 
+        postPutPersonDto.personType( input.getPersonType() );
+        postPutPersonDto.persoInfo( input.getPersoInfo() );
         List<String> list = input.getAppointmentId();
         if ( list != null ) {
             postPutPersonDto.appointmentId( new ArrayList<String>( list ) );
@@ -31,8 +33,6 @@ public class PersonToPostPutPersonMapperImpl implements PersonToPostPutPersonMap
         if ( list1 != null ) {
             postPutPersonDto.medicalRecordId( new ArrayList<String>( list1 ) );
         }
-        postPutPersonDto.persoInfo( input.getPersoInfo() );
-        postPutPersonDto.personType( input.getPersonType() );
 
         return postPutPersonDto.build();
     }
@@ -45,6 +45,8 @@ public class PersonToPostPutPersonMapperImpl implements PersonToPostPutPersonMap
 
         Person.PersonBuilder person = Person.builder();
 
+        person.personType( output.getPersonType() );
+        person.persoInfo( output.getPersoInfo() );
         List<String> list = output.getAppointmentId();
         if ( list != null ) {
             person.appointmentId( new ArrayList<String>( list ) );
@@ -53,8 +55,6 @@ public class PersonToPostPutPersonMapperImpl implements PersonToPostPutPersonMap
         if ( list1 != null ) {
             person.medicalRecordId( new ArrayList<String>( list1 ) );
         }
-        person.persoInfo( output.getPersoInfo() );
-        person.personType( output.getPersonType() );
 
         return person.build();
     }

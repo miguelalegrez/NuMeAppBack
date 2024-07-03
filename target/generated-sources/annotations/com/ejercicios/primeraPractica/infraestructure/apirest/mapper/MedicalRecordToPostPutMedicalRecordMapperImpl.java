@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-06-25T12:20:35+0200",
-    comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.36.0.v20231114-0937, environment: Java 21.0.1 (Oracle Corporation)"
+    date = "2024-07-01T09:17:10+0200",
+    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.2 (Oracle Corporation)"
 )
 @Component
 public class MedicalRecordToPostPutMedicalRecordMapperImpl implements MedicalRecordToPostPutMedicalRecordMapper {
@@ -23,11 +23,26 @@ public class MedicalRecordToPostPutMedicalRecordMapperImpl implements MedicalRec
 
         PostPutMedicalRecordDto.PostPutMedicalRecordDtoBuilder postPutMedicalRecordDto = PostPutMedicalRecordDto.builder();
 
+        postPutMedicalRecordDto.registryType( input.getRegistryType() );
         postPutMedicalRecordDto.observations( input.getObservations() );
         postPutMedicalRecordDto.patientId( input.getPatientId() );
-        postPutMedicalRecordDto.registryType( input.getRegistryType() );
 
         return postPutMedicalRecordDto.build();
+    }
+
+    @Override
+    public MedicalRecord fromOutputToInput(PostPutMedicalRecordDto output) {
+        if ( output == null ) {
+            return null;
+        }
+
+        MedicalRecord medicalRecord = new MedicalRecord();
+
+        medicalRecord.setRegistryType( output.getRegistryType() );
+        medicalRecord.setObservations( output.getObservations() );
+        medicalRecord.setPatientId( output.getPatientId() );
+
+        return medicalRecord;
     }
 
     @Override
@@ -42,21 +57,6 @@ public class MedicalRecordToPostPutMedicalRecordMapperImpl implements MedicalRec
         }
 
         return list;
-    }
-
-    @Override
-    public MedicalRecord fromOutputToInput(PostPutMedicalRecordDto output) {
-        if ( output == null ) {
-            return null;
-        }
-
-        MedicalRecord medicalRecord = new MedicalRecord();
-
-        medicalRecord.setObservations( output.getObservations() );
-        medicalRecord.setPatientId( output.getPatientId() );
-        medicalRecord.setRegistryType( output.getRegistryType() );
-
-        return medicalRecord;
     }
 
     @Override

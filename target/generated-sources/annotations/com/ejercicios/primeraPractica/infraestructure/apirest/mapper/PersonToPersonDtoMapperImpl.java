@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-06-22T20:57:50+0200",
-    comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.36.0.v20231114-0937, environment: Java 21.0.1 (Oracle Corporation)"
+    date = "2024-07-01T09:17:10+0200",
+    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.2 (Oracle Corporation)"
 )
 @Component
 public class PersonToPersonDtoMapperImpl implements PersonToPersonDtoMapper {
@@ -23,19 +23,42 @@ public class PersonToPersonDtoMapperImpl implements PersonToPersonDtoMapper {
 
         PersonDto.PersonDtoBuilder personDto = PersonDto.builder();
 
+        personDto.id( input.getId() );
+        personDto.personType( input.getPersonType() );
+        personDto.persoInfo( input.getPersoInfo() );
         List<String> list = input.getAppointmentId();
         if ( list != null ) {
             personDto.appointmentId( new ArrayList<String>( list ) );
         }
-        personDto.id( input.getId() );
         List<String> list1 = input.getMedicalRecordId();
         if ( list1 != null ) {
             personDto.medicalRecordId( new ArrayList<String>( list1 ) );
         }
-        personDto.persoInfo( input.getPersoInfo() );
-        personDto.personType( input.getPersonType() );
 
         return personDto.build();
+    }
+
+    @Override
+    public Person fromOutputToInput(PersonDto output) {
+        if ( output == null ) {
+            return null;
+        }
+
+        Person.PersonBuilder person = Person.builder();
+
+        person.id( output.getId() );
+        person.personType( output.getPersonType() );
+        person.persoInfo( output.getPersoInfo() );
+        List<String> list = output.getAppointmentId();
+        if ( list != null ) {
+            person.appointmentId( new ArrayList<String>( list ) );
+        }
+        List<String> list1 = output.getMedicalRecordId();
+        if ( list1 != null ) {
+            person.medicalRecordId( new ArrayList<String>( list1 ) );
+        }
+
+        return person.build();
     }
 
     @Override
@@ -50,29 +73,6 @@ public class PersonToPersonDtoMapperImpl implements PersonToPersonDtoMapper {
         }
 
         return list;
-    }
-
-    @Override
-    public Person fromOutputToInput(PersonDto output) {
-        if ( output == null ) {
-            return null;
-        }
-
-        Person.PersonBuilder person = Person.builder();
-
-        List<String> list = output.getAppointmentId();
-        if ( list != null ) {
-            person.appointmentId( new ArrayList<String>( list ) );
-        }
-        person.id( output.getId() );
-        List<String> list1 = output.getMedicalRecordId();
-        if ( list1 != null ) {
-            person.medicalRecordId( new ArrayList<String>( list1 ) );
-        }
-        person.persoInfo( output.getPersoInfo() );
-        person.personType( output.getPersonType() );
-
-        return person.build();
     }
 
     @Override

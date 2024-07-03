@@ -22,6 +22,9 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Service class for managing appointments.
+ */
 @Slf4j
 @Service
 public class AppointmentService implements AppointmentServiceInputPort {
@@ -35,8 +38,14 @@ public class AppointmentService implements AppointmentServiceInputPort {
 	@Autowired
 	AppointmentPatchMapper appointmentPatchMapper;
 
-	// Get all appointments
-
+	/**
+	 * Retrieves all appointments with pagination.
+	 *
+	 * @param pageable the pagination information
+	 * @return a page of appointments
+	 * @throws BusinessException if there is a business exception
+	 */
+	@Transactional
 	public Page<Appointment> getAppointments(@Valid Pageable pageable) throws BusinessException {
 		log.debug("getAllAppointments");
 
@@ -47,7 +56,13 @@ public class AppointmentService implements AppointmentServiceInputPort {
 		return appointmentRepoOutputPort.getAppointments(pageable);
 	}
 
-	// Add appointment
+	/**
+	 * Adds a new appointment.
+	 *
+	 * @param appointment the appointment to add
+	 * @return the ID of the added appointment
+	 * @throws BusinessException if there is a business exception
+	 */
 	@Transactional
 	public String addAppointment(Appointment appointment) throws BusinessException {
 
@@ -105,7 +120,13 @@ public class AppointmentService implements AppointmentServiceInputPort {
 		return exitId;
 	}
 
-	// Get appointments by Appointment id
+	/**
+	 * Retrieves an appointment by its ID.
+	 *
+	 * @param id the appointment ID
+	 * @return the appointment
+	 * @throws BusinessException if there is a business exception
+	 */
 	@Transactional
 	public Optional<Appointment> getAppointmentById(String id) throws BusinessException {
 		log.debug("getAppointmentById");
@@ -118,7 +139,14 @@ public class AppointmentService implements AppointmentServiceInputPort {
 		}
 	}
 
-	// Get appointments by PERSON ID
+	/**
+	 * Retrieves appointments by person ID.
+	 *
+	 * @param id       the person ID
+	 * @param pageable the pagination information
+	 * @return a page of appointments
+	 * @throws BusinessException if there is a business exception
+	 */
 	@Transactional
 	public Page<Appointment> getAppointmentsByPersonId(String id, Pageable pageable) throws BusinessException {
 		log.debug("getPatientAppointments");
@@ -132,7 +160,35 @@ public class AppointmentService implements AppointmentServiceInputPort {
 		}
 	}
 
-	// modify Appointment
+	/**
+	 * Retrieves appointments by person document.
+	 *
+	 * @param document the person document
+	 * @param pageable the pagination information
+	 * @return a page of appointments
+	 * @throws BusinessException if there is a business exception
+	 */
+	@Transactional
+	public Page<Appointment> getAppointmentsByPersonDocument(String document, Pageable pageable)
+			throws BusinessException {
+		log.debug("getPatientAppointmentsByDocument");
+
+		Optional<Person> personOpt = personRepository.findByPersoInfoDocument(document);
+		if (personOpt.isPresent()) {
+			Person person = personOpt.get();
+			return appointmentRepoOutputPort.getAppointmentsByPersonDocument(person.getPersoInfo().getDocument(),
+					pageable);
+		} else {
+			throw new BusinessException(Errors.PERSON_NOT_FOUND);
+		}
+	}
+
+	/**
+	 * Modifies an existing appointment.
+	 *
+	 * @param appointment the appointment to modify
+	 * @throws BusinessException if there is a business exception
+	 */
 	@Transactional
 	public void modifyAppointment(Appointment appointment) throws BusinessException {
 		log.debug("modifyAppointment");
@@ -144,6 +200,12 @@ public class AppointmentService implements AppointmentServiceInputPort {
 		appointmentRepoOutputPort.modifyAppointment(appointment);
 	}
 
+	/**
+	 * Partially modifies an existing appointment.
+	 *
+	 * @param appointment the appointment to modify
+	 * @throws BusinessException if there is a business exception
+	 */
 	@Transactional
 	public void modifyPartialAppointment(Appointment appointment) throws BusinessException {
 		log.debug("modifyPartialAppointment");
@@ -155,25 +217,22 @@ public class AppointmentService implements AppointmentServiceInputPort {
 		Appointment updated = foundAppointment.get();
 		appointmentPatchMapper.update(updated, appointment);
 		appointmentRepoOutputPort.modifyAppointment(updated);
-
 	}
 
+	/**
+	 * Deletes an appointment by its ID.
+	 *
+	 * @param id the appointment ID
+	 * @throws BusinessException if there is a business exception
+	 */
 	@Transactional
 	public void deleteAppointment(String id) throws BusinessException {
 		log.debug("deleteAppointment");
 		Optional<Appointment> foundAppointment = appointmentRepoOutputPort.getAppointmentById(id);
 		if (!foundAppointment.isPresent()) {
 			throw new BusinessException(Errors.APPOINTMENT_NOT_FOUND);
-
 		}
 		appointmentRepoOutputPort.deleteAppointment(id);
-
-	}
-
-	@Override
-	public Page<Appointment> getAppointmentsByType(@Valid PersonType type, Pageable pageable) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

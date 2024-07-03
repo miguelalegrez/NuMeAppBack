@@ -22,5 +22,7 @@ public interface PersonRepositoryOutputPort {
 
 	void deletePerson(@Valid String id);
 
-	Optional<Person> findByPersoInfoDocument(String document);
+	Optional<Person> findByPersoInfoDocument(@Valid String document);
+
+	Page<Person> findByNameAndSurname(@Valid String name, String surname, Pageable pageable);
 }

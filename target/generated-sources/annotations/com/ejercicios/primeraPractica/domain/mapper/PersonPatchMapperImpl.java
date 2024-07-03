@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-06-21T08:04:02+0200",
+    date = "2024-07-02T14:47:13+0200",
     comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.36.0.v20231114-0937, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
@@ -52,7 +52,7 @@ public class PersonPatchMapperImpl implements PersonPatchMapper {
         }
         if ( input.getPersoInfo() != null ) {
             if ( output.getPersoInfo() == null ) {
-                output.setPersoInfo( new PersonalInfo() );
+                output.setPersoInfo( PersonalInfo.builder().build() );
             }
             update( output.getPersoInfo(), input.getPersoInfo() );
         }

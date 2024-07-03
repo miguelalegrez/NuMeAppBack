@@ -23,6 +23,9 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Service class for managing persons.
+ */
 @Slf4j
 @Service
 public class PersonService implements PersonServiceInputPort {
@@ -31,11 +34,19 @@ public class PersonService implements PersonServiceInputPort {
 	private PersonRepositoryOutputPort personRepository;
 
 	@Autowired
-	PersonPatchMapper personPatchMapper;
+	private PersonPatchMapper personPatchMapper;
 
 	@Autowired
 	private DniValidator dniValidator;
 
+	/**
+	 * Retrieves persons by their type with pagination.
+	 *
+	 * @param personType the type of person (e.g., PATIENT, NUTRITIONIST)
+	 * @param pageable   the pagination information
+	 * @return a page of persons
+	 * @throws BusinessException if there is a business exception
+	 */
 	@Override
 	@Transactional
 	public Page<Person> getPersonsByType(@Valid PersonType personType, Pageable pageable) throws BusinessException {
@@ -47,21 +58,61 @@ public class PersonService implements PersonServiceInputPort {
 		return personRepository.getPersonsByPersonType(personType, pageable);
 	}
 
+	/**
+	 * Retrieves a person by their ID.
+	 *
+	 * @param id the person ID
+	 * @return the person
+	 */
 	@Override
+	@Transactional
 	public Optional<Person> getPersonById(@Valid String id) {
 		log.debug("getPersonById");
 
 		return personRepository.getPersonById(id);
 	}
 
+	/**
+	 * Retrieves persons by their name and surname with pagination.
+	 *
+	 * @param name     the person's name
+	 * @param surname  the person's surname
+	 * @param pageable the pagination information
+	 * @return a page of persons
+	 * @throws BusinessException if there is a business exception
+	 */
 	@Override
-	public Optional<Person> findByPersoInfoDocument(String document) {
+	@Transactional
+	public Page<Person> getPersonByNameAndSurname(@Valid String name, String surname, Pageable pageable)
+			throws BusinessException {
+		log.debug("getPersonByNameAndSurname");
+		if (pageable.getPageSize() > Constants.MAXIMUM_PAGINATION) {
+			throw new BusinessException(Errors.MAXIMUM_PAGINATION_EXCEEDED);
+		}
+		return personRepository.findByNameAndSurname(name, surname, pageable);
+	}
+
+	/**
+	 * Retrieves a person by their document.
+	 *
+	 * @param document the person's document
+	 * @return the person
+	 */
+	@Override
+	@Transactional
+	public Optional<Person> findByPersoInfoDocument(@Valid String document) {
 		log.debug("findPersoInfoDocument");
 
 		return personRepository.findByPersoInfoDocument(document);
-
 	}
 
+	/**
+	 * Creates a new patient.
+	 *
+	 * @param person the patient to create
+	 * @return the ID of the created patient
+	 * @throws BusinessException if there is a business exception
+	 */
 	@Override
 	@Transactional
 	public String createPatient(@Valid Person person) throws BusinessException {
@@ -75,10 +126,10 @@ public class PersonService implements PersonServiceInputPort {
 		dniValidator.validatePersonExistsByDocument(person.getPersoInfo().getDocument());
 
 		// Initialize appointments and Medical Record
-		List<String> appointments = new ArrayList();
+		List<String> appointments = new ArrayList<>();
 		person.setAppointmentId(appointments);
 
-		List<String> medicalRecords = new ArrayList();
+		List<String> medicalRecords = new ArrayList<>();
 		person.setMedicalRecordId(medicalRecords);
 
 		// Create the person
@@ -88,6 +139,13 @@ public class PersonService implements PersonServiceInputPort {
 		return nuevoId;
 	}
 
+	/**
+	 * Creates a new nutritionist.
+	 *
+	 * @param person the nutritionist to create
+	 * @return the ID of the created nutritionist
+	 * @throws BusinessException if there is a business exception
+	 */
 	@Override
 	@Transactional
 	public String createNutritionist(@Valid Person person) throws BusinessException {
@@ -101,10 +159,10 @@ public class PersonService implements PersonServiceInputPort {
 		dniValidator.validatePersonExistsByDocument(person.getPersoInfo().getDocument());
 
 		// Initialize appointments and Medical Record
-		List<String> appointments = new ArrayList();
+		List<String> appointments = new ArrayList<>();
 		person.setAppointmentId(appointments);
 
-		List<String> medicalRecords = new ArrayList();
+		List<String> medicalRecords = new ArrayList<>();
 		person.setMedicalRecordId(medicalRecords);
 
 		// Create the person
@@ -114,6 +172,12 @@ public class PersonService implements PersonServiceInputPort {
 		return nuevoId;
 	}
 
+	/**
+	 * Modifies an existing person.
+	 *
+	 * @param person the person to modify
+	 * @throws BusinessException if there is a business exception
+	 */
 	@Override
 	@Transactional
 	public void modifyPerson(@Valid Person person) throws BusinessException {
@@ -126,6 +190,12 @@ public class PersonService implements PersonServiceInputPort {
 		personRepository.modifyPerson(person);
 	}
 
+	/**
+	 * Partially modifies an existing person.
+	 *
+	 * @param person the person to modify
+	 * @throws BusinessException if there is a business exception
+	 */
 	@Override
 	@Transactional
 	public void modifyPartialPerson(@Valid Person person) throws BusinessException {
@@ -140,6 +210,12 @@ public class PersonService implements PersonServiceInputPort {
 		personRepository.modifyPerson(updated);
 	}
 
+	/**
+	 * Deletes a person by their ID.
+	 *
+	 * @param id the person ID
+	 * @throws BusinessException if there is a business exception
+	 */
 	@Override
 	@Transactional
 	public void deletePerson(@Valid String id) throws BusinessException {
