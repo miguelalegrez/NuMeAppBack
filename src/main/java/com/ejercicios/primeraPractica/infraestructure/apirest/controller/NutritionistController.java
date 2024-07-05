@@ -97,13 +97,14 @@ public class NutritionistController {
 	 * @param pageable the pagination information
 	 * @return a response entity containing the list of nutritionists
 	 */
-	@GetMapping("/search")
-	public ResponseEntity getNutritionistByNameAndSurname(@RequestParam String name, @RequestParam String surname,
-			Pageable pageable) {
+	@GetMapping("/searchNutritionists")
+	public ResponseEntity getNutritionistByNameAndSurnameAndType(@RequestParam String name,
+			@RequestParam String surname, Pageable pageable) {
 		log.debug("getNutritionistByNameAndSurname", name, surname);
 		try {
 			Page<Person> nutritionists;
-			nutritionists = personService.getPersonByNameAndSurname(name, surname, pageable);
+			nutritionists = personService.getPersonByNameAndSurnameAndType(name, surname, PersonType.NUTRITIONIST,
+					pageable);
 			log.debug("Retrieved nutritionists", nutritionists.getContent());
 			return ResponseEntity.ok(personToPersonDto.fromInputToOutput(nutritionists));
 		} catch (BusinessException e) {

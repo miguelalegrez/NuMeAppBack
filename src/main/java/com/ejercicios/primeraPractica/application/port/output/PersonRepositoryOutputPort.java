@@ -24,5 +24,6 @@ public interface PersonRepositoryOutputPort {
 
 	Optional<Person> findByPersoInfoDocument(@Valid String document);
 
-	Page<Person> findByNameAndSurname(@Valid String name, String surname, Pageable pageable);
+	Page<Person> findByNameAndSurnameAndPersonType(@Valid String name, String surname, PersonType personType,
+			Pageable pageable);
 }

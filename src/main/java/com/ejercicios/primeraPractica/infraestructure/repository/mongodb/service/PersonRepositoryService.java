@@ -76,11 +76,13 @@ public class PersonRepositoryService implements PersonRepositoryOutputPort {
 	 * @return a page of persons
 	 */
 	@Override
-	public Page<Person> findByNameAndSurname(@Valid String name, String surname, Pageable pageable) {
+	public Page<Person> findByNameAndSurnameAndPersonType(@Valid String name, String surname, PersonType personType,
+			Pageable pageable) {
 		log.debug("getPersonsByNameAndSurname");
 
-		Page<PersonEntity> personEntity = persoRepository.findByPersoInfoNameAndPersoInfoSurnameAndEliminado(name,
-				surname, false, pageable);
+		Page<PersonEntity> personEntity = persoRepository
+				.findByPersonTypeAndPersoInfoNameAndPersoInfoSurnameAndEliminado(personType, name, surname, false,
+						pageable);
 		return personToPersonEntityMapper.fromOutputToInput(personEntity);
 	}
 

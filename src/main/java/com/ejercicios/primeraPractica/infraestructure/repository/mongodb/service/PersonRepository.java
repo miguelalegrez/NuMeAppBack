@@ -24,8 +24,8 @@ public interface PersonRepository extends MongoRepository<PersonEntity, String> 
 
 	Page<PersonEntity> findByPersonTypeAndEliminado(PersonType personType, boolean eliminado, Pageable pageable);
 
-	@Query("{'persoInfo.name': {$regex: ?0, $options: 'i'}, 'persoInfo.surname': {$regex: ?1, $options: 'i'}, 'eliminado': ?2}")
-	Page<PersonEntity> findByPersoInfoNameAndPersoInfoSurnameAndEliminado(String name, String surname,
-			boolean eliminado, Pageable pageable);
+	@Query("{'personType': ?0, 'persoInfo.name': {$regex: ?1, $options: 'i'}, 'persoInfo.surname': {$regex: ?2, $options: 'i'}, 'eliminado': ?3}")
+	Page<PersonEntity> findByPersonTypeAndPersoInfoNameAndPersoInfoSurnameAndEliminado(PersonType personType,
+			String name, String surname, boolean eliminado, Pageable pageable);
 
 }

@@ -83,13 +83,13 @@ public class PersonService implements PersonServiceInputPort {
 	 */
 	@Override
 	@Transactional
-	public Page<Person> getPersonByNameAndSurname(@Valid String name, String surname, Pageable pageable)
-			throws BusinessException {
-		log.debug("getPersonByNameAndSurname");
+	public Page<Person> getPersonByNameAndSurnameAndType(String name, String surname, PersonType personType,
+			Pageable pageable) throws BusinessException {
+		log.debug("getPersonByNameAndSurnameAndType");
 		if (pageable.getPageSize() > Constants.MAXIMUM_PAGINATION) {
 			throw new BusinessException(Errors.MAXIMUM_PAGINATION_EXCEEDED);
 		}
-		return personRepository.findByNameAndSurname(name, surname, pageable);
+		return personRepository.findByNameAndSurnameAndPersonType(name, surname, personType, pageable);
 	}
 
 	/**

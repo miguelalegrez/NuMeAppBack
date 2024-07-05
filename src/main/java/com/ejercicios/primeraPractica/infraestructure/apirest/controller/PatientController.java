@@ -101,19 +101,18 @@ public class PatientController {
 	 * @param pageable the pagination information
 	 * @return a response entity containing the list of patients
 	 */
-	@GetMapping("/search")
+	@GetMapping("/searchPatients")
 	public ResponseEntity getPatientByNameAndSurname(@RequestParam String name, @RequestParam String surname,
 			Pageable pageable) {
 		log.debug("getPatientByNameAndSurname: {} {}", name, surname);
 		try {
-			Page<Person> patients;
-			patients = personService.getPersonByNameAndSurname(name, surname, pageable);
+			Page<Person> patients = personService.getPersonByNameAndSurnameAndType(name, surname, PersonType.PATIENT,
+					pageable);
 			log.debug("Retrieved patients: {}", patients.getContent());
 			return ResponseEntity.ok(personToPersonDto.fromInputToOutput(patients));
 		} catch (BusinessException e) {
-			log.error("Error getting users", e);
+			log.error("Error getting patients", e);
 			return ResponseEntity.badRequest().body(e.getMessage());
-
 		}
 	}
 

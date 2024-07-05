@@ -17,8 +17,8 @@ public interface PersonServiceInputPort {
 
 	Optional<Person> getPersonById(@Valid String id) throws BusinessException;
 
-	Page<Person> getPersonByNameAndSurname(@Valid String name, String surname, Pageable pageable)
-			throws BusinessException;
+	Page<Person> getPersonByNameAndSurnameAndType(@Valid String name, String surname, PersonType personType,
+			Pageable pageable) throws BusinessException;
 
 	String createPatient(@Valid Person person) throws BusinessException;
 
