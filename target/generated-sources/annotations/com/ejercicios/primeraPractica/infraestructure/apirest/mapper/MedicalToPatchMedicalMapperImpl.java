@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-07-01T09:17:10+0200",
-    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.2 (Oracle Corporation)"
+    date = "2024-07-09T11:57:09+0200",
+    comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.36.0.v20231114-0937, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
 public class MedicalToPatchMedicalMapperImpl implements MedicalToPatchMedicalMapper {
@@ -24,9 +24,9 @@ public class MedicalToPatchMedicalMapperImpl implements MedicalToPatchMedicalMap
         MedicalRecordPatchDto.MedicalRecordPatchDtoBuilder medicalRecordPatchDto = MedicalRecordPatchDto.builder();
 
         medicalRecordPatchDto.date( input.getDate() );
+        medicalRecordPatchDto.observations( input.getObservations() );
         medicalRecordPatchDto.patientId( input.getPatientId() );
         medicalRecordPatchDto.registryType( input.getRegistryType() );
-        medicalRecordPatchDto.observations( input.getObservations() );
 
         return medicalRecordPatchDto.build();
     }
@@ -40,9 +40,9 @@ public class MedicalToPatchMedicalMapperImpl implements MedicalToPatchMedicalMap
         MedicalRecord medicalRecord = new MedicalRecord();
 
         medicalRecord.setDate( output.getDate() );
-        medicalRecord.setRegistryType( output.getRegistryType() );
         medicalRecord.setObservations( output.getObservations() );
         medicalRecord.setPatientId( output.getPatientId() );
+        medicalRecord.setRegistryType( output.getRegistryType() );
 
         return medicalRecord;
     }

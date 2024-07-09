@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-07-05T09:17:41+0200",
+    date = "2024-07-09T11:57:09+0200",
     comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.36.0.v20231114-0937, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
@@ -36,20 +36,6 @@ public class AppointmentToPostPutAppointmentMapperImpl implements AppointmentToP
     }
 
     @Override
-    public List<PostPutAppointmentDto> fromInputToOutput(List<Appointment> inputList) {
-        if ( inputList == null ) {
-            return null;
-        }
-
-        List<PostPutAppointmentDto> list = new ArrayList<PostPutAppointmentDto>( inputList.size() );
-        for ( Appointment appointment : inputList ) {
-            list.add( fromInputToOutput( appointment ) );
-        }
-
-        return list;
-    }
-
-    @Override
     public Appointment fromOutputToInput(PostPutAppointmentDto output) {
         if ( output == null ) {
             return null;
@@ -67,6 +53,20 @@ public class AppointmentToPostPutAppointmentMapperImpl implements AppointmentToP
         appointment.setPatientSurname( output.getPatientSurname() );
 
         return appointment;
+    }
+
+    @Override
+    public List<PostPutAppointmentDto> fromInputToOutput(List<Appointment> inputList) {
+        if ( inputList == null ) {
+            return null;
+        }
+
+        List<PostPutAppointmentDto> list = new ArrayList<PostPutAppointmentDto>( inputList.size() );
+        for ( Appointment appointment : inputList ) {
+            list.add( fromInputToOutput( appointment ) );
+        }
+
+        return list;
     }
 
     @Override

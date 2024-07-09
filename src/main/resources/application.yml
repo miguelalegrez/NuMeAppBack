@@ -3,7 +3,8 @@ spring:
     name: NuMeAppHex
   data:
     mongodb:
-      uri: mongodb://localhost:27017/pruebas
+      uri: mongodb+srv://miguelalegrez:Abagerdi3@cluster0.3lx35vi.mongodb.net/pruebas?retryWrites=true&w=majority&appName=Cluster0
+
 
 server:
   port: 8082

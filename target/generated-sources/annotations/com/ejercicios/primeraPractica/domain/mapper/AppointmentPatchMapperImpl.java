@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-07-01T09:17:10+0200",
-    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.2 (Oracle Corporation)"
+    date = "2024-07-09T11:57:09+0200",
+    comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.36.0.v20231114-0937, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
 public class AppointmentPatchMapperImpl implements AppointmentPatchMapper {
@@ -18,23 +18,14 @@ public class AppointmentPatchMapperImpl implements AppointmentPatchMapper {
             return;
         }
 
-        if ( input.getId() != null ) {
-            output.setId( input.getId() );
-        }
         if ( input.getDate() != null ) {
             output.setDate( input.getDate() );
         }
-        if ( input.getPatientId() != null ) {
-            output.setPatientId( input.getPatientId() );
+        if ( input.getId() != null ) {
+            output.setId( input.getId() );
         }
-        if ( input.getPatientName() != null ) {
-            output.setPatientName( input.getPatientName() );
-        }
-        if ( input.getPatientSurname() != null ) {
-            output.setPatientSurname( input.getPatientSurname() );
-        }
-        if ( input.getPatientDocument() != null ) {
-            output.setPatientDocument( input.getPatientDocument() );
+        if ( input.getNutritionistDocument() != null ) {
+            output.setNutritionistDocument( input.getNutritionistDocument() );
         }
         if ( input.getNutritionistId() != null ) {
             output.setNutritionistId( input.getNutritionistId() );
@@ -45,8 +36,17 @@ public class AppointmentPatchMapperImpl implements AppointmentPatchMapper {
         if ( input.getNutritionistSurname() != null ) {
             output.setNutritionistSurname( input.getNutritionistSurname() );
         }
-        if ( input.getNutritionistDocument() != null ) {
-            output.setNutritionistDocument( input.getNutritionistDocument() );
+        if ( input.getPatientDocument() != null ) {
+            output.setPatientDocument( input.getPatientDocument() );
+        }
+        if ( input.getPatientId() != null ) {
+            output.setPatientId( input.getPatientId() );
+        }
+        if ( input.getPatientName() != null ) {
+            output.setPatientName( input.getPatientName() );
+        }
+        if ( input.getPatientSurname() != null ) {
+            output.setPatientSurname( input.getPatientSurname() );
         }
     }
 }

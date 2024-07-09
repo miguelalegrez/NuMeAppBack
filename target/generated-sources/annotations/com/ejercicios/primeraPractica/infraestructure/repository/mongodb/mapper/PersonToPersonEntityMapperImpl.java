@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-07-01T09:17:10+0200",
-    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.2 (Oracle Corporation)"
+    date = "2024-07-09T11:57:09+0200",
+    comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.36.0.v20231114-0937, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
 public class PersonToPersonEntityMapperImpl implements PersonToPersonEntityMapper {
@@ -23,17 +23,17 @@ public class PersonToPersonEntityMapperImpl implements PersonToPersonEntityMappe
 
         PersonEntity.PersonEntityBuilder personEntity = PersonEntity.builder();
 
-        personEntity.id( input.getId() );
-        personEntity.personType( input.getPersonType() );
-        personEntity.persoInfo( input.getPersoInfo() );
         List<String> list = input.getAppointmentId();
         if ( list != null ) {
             personEntity.appointmentId( new ArrayList<String>( list ) );
         }
+        personEntity.id( input.getId() );
         List<String> list1 = input.getMedicalRecordId();
         if ( list1 != null ) {
             personEntity.medicalRecordId( new ArrayList<String>( list1 ) );
         }
+        personEntity.persoInfo( input.getPersoInfo() );
+        personEntity.personType( input.getPersonType() );
 
         return personEntity.build();
     }
@@ -46,17 +46,17 @@ public class PersonToPersonEntityMapperImpl implements PersonToPersonEntityMappe
 
         Person.PersonBuilder person = Person.builder();
 
-        person.id( output.getId() );
-        person.personType( output.getPersonType() );
-        person.persoInfo( output.getPersoInfo() );
         List<String> list = output.getAppointmentId();
         if ( list != null ) {
             person.appointmentId( new ArrayList<String>( list ) );
         }
+        person.id( output.getId() );
         List<String> list1 = output.getMedicalRecordId();
         if ( list1 != null ) {
             person.medicalRecordId( new ArrayList<String>( list1 ) );
         }
+        person.persoInfo( output.getPersoInfo() );
+        person.personType( output.getPersonType() );
 
         return person.build();
     }

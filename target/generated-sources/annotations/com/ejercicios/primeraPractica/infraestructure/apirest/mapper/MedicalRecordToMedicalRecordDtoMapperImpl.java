@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-07-01T09:17:10+0200",
-    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.2 (Oracle Corporation)"
+    date = "2024-07-09T11:57:09+0200",
+    comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.36.0.v20231114-0937, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
 public class MedicalRecordToMedicalRecordDtoMapperImpl implements MedicalRecordToMedicalRecordDtoMapper {
@@ -23,11 +23,11 @@ public class MedicalRecordToMedicalRecordDtoMapperImpl implements MedicalRecordT
 
         MedicalRecordDto.MedicalRecordDtoBuilder medicalRecordDto = MedicalRecordDto.builder();
 
-        medicalRecordDto.id( input.getId() );
         medicalRecordDto.date( input.getDate() );
-        medicalRecordDto.registryType( input.getRegistryType() );
+        medicalRecordDto.id( input.getId() );
         medicalRecordDto.observations( input.getObservations() );
         medicalRecordDto.patientId( input.getPatientId() );
+        medicalRecordDto.registryType( input.getRegistryType() );
 
         return medicalRecordDto.build();
     }
@@ -40,11 +40,11 @@ public class MedicalRecordToMedicalRecordDtoMapperImpl implements MedicalRecordT
 
         MedicalRecord medicalRecord = new MedicalRecord();
 
-        medicalRecord.setId( output.getId() );
         medicalRecord.setDate( output.getDate() );
-        medicalRecord.setRegistryType( output.getRegistryType() );
+        medicalRecord.setId( output.getId() );
         medicalRecord.setObservations( output.getObservations() );
         medicalRecord.setPatientId( output.getPatientId() );
+        medicalRecord.setRegistryType( output.getRegistryType() );
 
         return medicalRecord;
     }
